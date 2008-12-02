@@ -161,6 +161,10 @@ public abstract class Query
 	public static final String DISTRIBUTION_SPECIMEN_REQUIREMENT = "DistributionSpecReq";
 
 	public static final String DISTRIBUTION_PROTOCOL = "DistributionProtocol";
+	public static final String DISTRIBUTION = "Distribution";
+	
+	public static final String DISTRIBUTION_ARRAY = "Distribution_array";
+
 
 	public static final String REPORTED_PROBLEM = "ReportedProblem";
 
