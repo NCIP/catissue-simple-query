@@ -7,8 +7,10 @@
 
 package edu.wustl.common.query;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 /**
  * @author aarti_sharma
@@ -16,7 +18,7 @@ import java.sql.SQLException;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Table implements Serializable
+public class Table implements Serializable,edu.wustl.common.datatypes.IDBDataType
 {
 
 	private String tableName;
@@ -204,5 +206,32 @@ public class Table implements Serializable
 	public void setLinkingTable(Table linkingTable)
 	{
 		this.linkingTable = linkingTable;
+	}
+	/* (non-Javadoc)
+	 * @see edu.wustl.common.datatypes.IDBDataType
+	 * #validate(java.lang.String, org.apache.struts.action.ActionErrors)
+	 */
+	/**
+	 * This method validate entered values.
+	 * @param enteredValue entered Value.
+	 * @param errors errors.
+	 * @return conditionError boolean value.
+	 */
+	public boolean validate(String enteredValue, ActionErrors errors)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * get Object Value.
+	 * @param str string value
+	 * @return Object.
+	 * @throws ParseException Parse Exception
+	 * @throws IOException IOException
+	 */
+	public Object getObjectValue(String str)throws ParseException, IOException
+	{
+		return new Table(str, str);
 	}
 }
