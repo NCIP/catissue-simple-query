@@ -398,7 +398,7 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	private boolean validateDataType(String dataType, String enteredValue, ActionErrors errors)
 	{
 		IDBDataType dbDataType = DataTypeConfigFactory.getInstance()
-				.getValidatorDataType(dataType);
+				.getDataType(dataType);
 		return dbDataType.validate(enteredValue, errors);
 	}
 
