@@ -16,10 +16,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.apache.log4j.PropertyConfigurator;
 
-import edu.wustl.common.bizlogic.QueryBizLogic;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.global.Variables;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.simplequery.bizlogic.QueryBizLogic;
 
 public class Client extends AbstractClient
 {
