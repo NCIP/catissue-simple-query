@@ -7,7 +7,7 @@
  *@version 1.0
  */
 
-package edu.wustl.common.bizlogic;
+package edu.wustl.simplequery.bizlogic;
 
 import java.io.IOException;
 import java.io.OutputStream;
