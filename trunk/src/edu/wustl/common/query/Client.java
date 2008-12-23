@@ -16,6 +16,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.apache.log4j.PropertyConfigurator;
 
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.global.Variables;
 import edu.wustl.common.util.logger.Logger;
@@ -244,9 +245,10 @@ public class Client extends AbstractClient
 
 	public static void main(String[] args)
 	{
-		Variables.applicationHome = System.getProperty("user.dir");
+		String appHome = CommonServiceLocator.getInstance().getAppHome();
+		//Variables.applicationHome = System.getProperty("user.dir");
 		Logger.out = org.apache.log4j.Logger.getLogger("");
-		PropertyConfigurator.configure(Variables.applicationHome + "\\WEB-INF\\src\\"
+		PropertyConfigurator.configure(appHome + "\\WEB-INF\\src\\"
 				+ "ApplicationResources.properties");
 
 		Logger.out.debug("here");
@@ -439,7 +441,7 @@ public class Client extends AbstractClient
 		//          			   new Operator(Operator.EQUAL),"'Fluid'"),new Operator(Operator.AND));
 		//                 ((SimpleQuery)query).addCondition(simpleConditionsNode);
 
-		query = QueryFactory.getInstance().newQuery(Query.ADVANCED_QUERY, Query.PARTICIPANT);
+		/*query = QueryFactory.getInstance().newQuery(Query.ADVANCED_QUERY, Query.PARTICIPANT);
 		try
 		{
 			query.addElementToView(new DataElement(Query.PARTICIPANT, "IDENTIFIER"));
@@ -550,13 +552,13 @@ public class Client extends AbstractClient
 			((AdvancedConditionsImpl) ((AdvancedQuery) query).whereConditions)
 					.setWhereCondition(root);
 
-			Logger.out.debug("\n\n" + query.getString() + "\n\n");
+			Logger.out.debug("\n\n" + query.getString() + "\n\n");*/
 		}
-		catch (SQLException e1)
+		/*catch (SQLException e1)
 		{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
-	}
+		}*/
+//	}
 
 }
