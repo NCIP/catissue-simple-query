@@ -8,11 +8,12 @@ import java.util.Date;
 
 import edu.wustl.common.cde.CDEManager;
 import edu.wustl.common.util.Utility;
-import edu.wustl.common.util.global.Constants;
+import edu.wustl.simplequery.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  *<p>Title: Condition</p>
@@ -316,6 +317,11 @@ public class Condition
 			catch (ParseException parseExp)
 			{
 				Logger.out.debug("Wrong Date Format");
+			}
+			catch (DAOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		return newValue;

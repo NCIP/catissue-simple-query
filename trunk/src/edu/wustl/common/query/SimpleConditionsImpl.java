@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Vector;
 
-import edu.wustl.common.util.global.Constants;
+import edu.wustl.simplequery.global.Constants;
 
 /**
  *<p>Title: </p>

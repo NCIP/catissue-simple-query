@@ -13,13 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.util.dbmanager.DAOException;
-import edu.wustl.common.util.global.Constants;
-import edu.wustl.common.util.logger.Logger;
+import edu.wustl.simplequery.global.Constants;
 import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.QueryWhereClauseImpl;
+import edu.wustl.dao.QueryWhereClause;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  * ResultData is used to generate the data required for the result view of query interface.
@@ -58,18 +57,20 @@ public class ResultData
 		List dataList = new ArrayList();
 		//Bug#2003: For having unique records in result view
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
-		JDBCDAO dao = daofactory.getJDBCDAO();
+		JDBCDAO dao = null;
 		try
 		{
+			dao = daofactory.getJDBCDAO();
 			dao.openSession(sessionDataBean);
 			boolean onlyDistinctRows = true;
 		//	Logger.out.debug("Get only distinct rows:" + onlyDistinctRows);
 			
-			QueryWhereClauseImpl queryWhereClauseImpl = new QueryWhereClauseImpl();
-			queryWhereClauseImpl.setWhereClause(whereColumnName, whereColumnCondition,
+			QueryWhereClause queryWhereClause = new QueryWhereClause(tmpResultsTableName);
+			queryWhereClause.getWhereCondition(whereColumnName, whereColumnCondition,
 					whereColumnValue,null);
 			
-			dataList = dao.retrieve(tmpResultsTableName, columnList, queryWhereClauseImpl, onlyDistinctRows);
+			
+			dataList = dao.retrieve(tmpResultsTableName, columnList, queryWhereClause, onlyDistinctRows);
 			
 		//	Logger.out.debug("List of spreadsheet data for advance search:" + dataList);
 

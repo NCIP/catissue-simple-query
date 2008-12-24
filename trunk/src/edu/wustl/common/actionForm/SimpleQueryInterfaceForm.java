@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,9 +24,12 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 
+import edu.wustl.common.datatypes.DataTypeConfigFactory;
+import edu.wustl.common.datatypes.IDBDataType;
+import edu.wustl.common.exception.ParseException;
 import edu.wustl.common.query.Operator;
-import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.global.Validator;
+import edu.wustl.simplequery.global.Constants;
 
 /**
  * SimpleQueryInterfaceForm Class is used to encapsulate all the request parameters passed.
@@ -234,36 +236,47 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	 * @param mapping ActionMapping object.
 	 * @param request HttpServletRequest object.
 	 * @return ActionErrors.
+	 * @throws ParseException 
 	 */
-	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request)
+	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) 
 	{
 		ActionErrors errors = new ActionErrors();
 		//if the operation is AND / OR.
-		if (isAndOrOperation())
+		try
 		{
-			validateAndOrOperationTrue(errors);
-		}
-		else
-		{
-			boolean tableError = false, attrError = false, conditionError = false;
-			String errorKeyForTable = "simpleQuery.object.required";
-			String errorKeyForField = "simpleQuery.attribute.required";
-			for (int i = 1; i <= Integer.parseInt(counter); i++)
+
+			if (isAndOrOperation())
 			{
-				String condDataElement = i + "_Condition_DataElement_table";
-				tableError = isError(errors, tableError, errorKeyForTable, condDataElement);
-
-				condDataElement = i + "_Condition_DataElement_field";
-				attrError = isError(errors, attrError, errorKeyForField, condDataElement);
-
-				if (!conditionError)
+				validateAndOrOperationTrue(errors);
+			}
+			else
+			{
+				boolean tableError = false, attrError = false, conditionError = false;
+				String errorKeyForTable = "simpleQuery.object.required";
+				String errorKeyForField = "simpleQuery.attribute.required";
+				for (int i = 1; i <= Integer.parseInt(counter); i++)
 				{
-					conditionError = validateOperatorValue(errors, i);
+					String condDataElement = i + "_Condition_DataElement_table";
+					tableError = isError(errors, tableError, errorKeyForTable, condDataElement);
+
+					condDataElement = i + "_Condition_DataElement_field";
+					attrError = isError(errors, attrError, errorKeyForField, condDataElement);
+
+					if (!conditionError)
+					{
+						conditionError = validateOperatorValue(errors, i);
+
+					}
 				}
 			}
+			setAndOrOperation(false);
+			setMutable(false);
 		}
-		setAndOrOperation(false);
-		setMutable(false);
+		catch (ParseException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return errors;
 	}
@@ -322,8 +335,9 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	 * @param errors errors.
 	 * @param integerValue integer Value.
 	 * @return conditionError.
+	 * @throws ParseException 
 	 */
-	private boolean validateOperatorValue(ActionErrors errors, int integerValue)
+	private boolean validateOperatorValue(ActionErrors errors, int integerValue) throws ParseException
 	{
 		boolean conditionError = false;
 		Validator validator = new Validator();
@@ -345,8 +359,9 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	 * @param errors ActionErrors object.
 	 * @param integerValue integer Value for key generation.
 	 * @return conditionError
+	 * @throws ParseException 
 	 */
-	private boolean validateCondition(ActionErrors errors, int integerValue)
+	private boolean validateCondition(ActionErrors errors, int integerValue) throws ParseException
 	{
 		boolean conditionError;
 		String keyString = "SimpleConditionsNode:#_Condition_value";
@@ -394,8 +409,9 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	 * @param enteredValue entered Value.
 	 * @param errors ActionErrors.
 	 * @return returns true if valid data type else false.
+	 * @throws ParseException 
 	 */
-	private boolean validateDataType(String dataType, String enteredValue, ActionErrors errors)
+	private boolean validateDataType(String dataType, String enteredValue, ActionErrors errors) throws ParseException
 	{
 		IDBDataType dbDataType = DataTypeConfigFactory.getInstance()
 				.getDataType(dataType);
