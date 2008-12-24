@@ -1,5 +1,4 @@
 package edu.wustl.simplequery.global;
-
 /**
  * Constants required for SimpleQuery.
  * @author deepti_shelar
@@ -24,10 +23,12 @@ public class Constants
 
 	public static final String SIMPLE_QUERY_INTERFACE_ACTION = "/SimpleQueryInterface.do";
 	public static final String HYPERLINK_COLUMN_MAP = "hyperlinkColumnMap";
-	public static final String TABLE_ALIAS_NAME = "aliasName";
+	
 	public static final String ATTRIBUTE_NAME_LIST = "attributeNameList";
 	public static final String ATTRIBUTE_CONDITION_LIST = "attributeConditionList";
 	public static final String ORIGINAL_SIMPLE_QUERY_OBJECT = "originalSimpleQueryObject";
 	public static final String SIMPLE_QUERY_COUNTER = "counter";
-
+	// Query results view temporary table name.
+	public static final String QUERY_RESULTS_TABLE = "CATISSUE_QUERY_RESULTS";
+	public static final String SPREADSHEET_VIEW = "Spreadsheet View";
 }
