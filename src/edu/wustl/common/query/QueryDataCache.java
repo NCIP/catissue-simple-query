@@ -14,12 +14,11 @@ package edu.wustl.common.query;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import edu.wustl.common.domain.QueryTableData;
-import edu.wustl.common.util.dbmanager.DAOException;
-import edu.wustl.common.util.global.Constants;
+
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  * This Class is used to cache all the data (table names, table display names,

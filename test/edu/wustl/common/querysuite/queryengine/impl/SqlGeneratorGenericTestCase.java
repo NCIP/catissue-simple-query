@@ -13,7 +13,7 @@ import edu.wustl.common.querysuite.GenericQueryGeneratorMock;
 import edu.wustl.common.querysuite.queryobject.ICondition;
 import edu.wustl.common.querysuite.queryobject.IExpression;
 import edu.wustl.common.querysuite.queryobject.RelationalOperator;
-import edu.wustl.common.util.global.Constants;
+import edu.wustl.simplequery.global.Constants;
 import edu.wustl.common.util.global.Variables;
 import edu.wustl.common.util.logger.Logger;
 

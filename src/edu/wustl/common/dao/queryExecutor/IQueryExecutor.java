@@ -4,7 +4,8 @@ import java.sql.Connection;
 import java.util.Map;
 
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.util.dbmanager.DAOException;
+import edu.wustl.common.util.PagenatedResultData;
+import edu.wustl.dao.exception.DAOException;
 
 
 public interface IQueryExecutor 

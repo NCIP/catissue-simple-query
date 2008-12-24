@@ -26,7 +26,7 @@ import edu.wustl.common.querysuite.queryobject.impl.JoinGraph;
 import edu.wustl.common.querysuite.queryobject.util.InheritanceUtils;
 import edu.wustl.common.util.InheritanceUtilMock;
 import edu.wustl.common.util.Utility;
-import edu.wustl.common.util.global.Constants;
+import edu.wustl.simplequery.global.Constants;
 import edu.wustl.common.util.global.Variables;
 import edu.wustl.common.util.logger.Logger;
 

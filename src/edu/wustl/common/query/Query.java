@@ -12,15 +12,16 @@ import java.util.Set;
 import java.util.Vector;
 
 import edu.wustl.common.beans.SessionDataBean;
-import edu.wustl.common.dao.queryExecutor.PagenatedResultData;
+import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.common.util.PagenatedResultData;
+import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.Utility;
-import edu.wustl.common.util.dbmanager.DAOException;
-import edu.wustl.common.util.global.Constants;
+import edu.wustl.simplequery.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
-import edu.wustl.dao.util.QueryParams;
+import edu.wustl.dao.exception.DAOException;
 
 
 /**
@@ -250,11 +251,15 @@ public abstract class Query
 		}
 		catch (DAOException daoExp)
 		{
-			throw new DAOException(daoExp.getMessage(), daoExp);
+			//have to change TBD
+			ErrorKey errorKey = ErrorKey.getErrorKey("simple.query.error");
+			throw new DAOException(errorKey,daoExp ,"SpecimenCollectionGroup.java :");
 		}
 		catch (ClassNotFoundException classExp)
 		{
-			throw new DAOException(classExp.getMessage(), classExp);
+//			have to change TBD
+			ErrorKey errorKey = ErrorKey.getErrorKey("simple.query.error");
+			throw new DAOException(errorKey,classExp ,"SpecimenCollectionGroup.java :");
 		}
 	}
 

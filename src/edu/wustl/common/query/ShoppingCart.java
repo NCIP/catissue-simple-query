@@ -13,7 +13,9 @@ package edu.wustl.common.query;
 import java.util.Hashtable;
 
 import edu.wustl.common.domain.AbstractDomainObject;
+import edu.wustl.common.exception.ApplicationException;
 import edu.wustl.common.exception.BizLogicException;
+import edu.wustl.common.exception.ErrorKey;
 
 /**
  * This class models the shopping cart of the user.
@@ -59,7 +61,7 @@ public class ShoppingCart
 	 * Adds an object to the cart.
 	 * @param obj an object to be added to the cart.
 	 */
-	public void add(AbstractDomainObject obj) throws BizLogicException
+	public void add(AbstractDomainObject obj) throws ApplicationException
 	{
 		if (obj != null)
 		{
@@ -68,8 +70,9 @@ public class ShoppingCart
 			Object returnObject = cart.put(key, obj);
 			if (returnObject != null)
 			{
-				throw new BizLogicException("Specimen " + returnObject
-						+ " already added to the Shopping Cart.");
+				ErrorKey errorKey = ErrorKey.getErrorKey("simple.query.error");
+				throw new ApplicationException(errorKey,new Exception() ,"ShoppingCart.java :");
+				
 			}
 		}
 	}

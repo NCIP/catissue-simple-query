@@ -13,12 +13,12 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Vector;
 
-
-import edu.wustl.common.util.global.Constants;
+import edu.wustl.simplequery.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  * @author aarti_sharma
@@ -101,28 +101,39 @@ public class DataElement implements Serializable
 	 */
 	public String toSQLString(int tableSufix) throws SQLException
 	{
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
-		JDBCDAO dao = daofactory.getJDBCDAO();
 		
-		if (table.toSQLString() == null || field == null)
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		JDBCDAO dao;
+		String fieldName = "";
+		try
 		{
-			return null;
-		}
-		String fieldName = table.toSQLString() + tableSufix + "." + field + " ";
-		if ((fieldType != null)
-				&& (Constants.FIELD_TYPE_TIMESTAMP_TIME.equalsIgnoreCase(fieldType)))
-		{
-			fieldName = dao.getTimeFormatFunction() + "(" + fieldName + ",'"
-					+ dao.getTimePattern() + "') ";
-		}
-		else if ((fieldType != null)
-				&& (Constants.FIELD_TYPE_TIMESTAMP_DATE.equalsIgnoreCase(fieldType)))
-		{
-			fieldName = dao.getStrTodateFunction() + "(" + dao.getDateFormatFunction()+ "("
-					+ fieldName + ",'" + dao.getDatePattern() + "')" + ",'"
-					+ dao.getDatePattern() + "')";
-		}
+			dao = daofactory.getJDBCDAO();
 
+
+			if (table.toSQLString() == null || field == null)
+			{
+				return null;
+			}
+			fieldName = table.toSQLString() + tableSufix + "." + field + " ";
+			if ((fieldType != null)
+					&& (Constants.FIELD_TYPE_TIMESTAMP_TIME.equalsIgnoreCase(fieldType)))
+			{
+				fieldName = dao.getTimeFormatFunction() + "(" + fieldName + ",'"
+				+ dao.getTimePattern() + "') ";
+			}
+			else if ((fieldType != null)
+					&& (Constants.FIELD_TYPE_TIMESTAMP_DATE.equalsIgnoreCase(fieldType)))
+			{
+				fieldName = dao.getStrTodateFunction() + "(" + dao.getDateFormatFunction()+ "("
+				+ fieldName + ",'" + dao.getDatePattern() + "')" + ",'"
+				+ dao.getDatePattern() + "')";
+			}
+		}
+		catch (DAOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return fieldName;
 	}
 
