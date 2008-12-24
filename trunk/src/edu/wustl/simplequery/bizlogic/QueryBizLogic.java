@@ -1524,7 +1524,15 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		logger.info("sqlForQueryLog:" + sqlForQueryLog);
 
 	}
+	
+	
 
+	/*public List getColumnNames(String arg0) throws DAOException, ClassNotFoundException
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+*/
 	/*public void delete(Object arg0) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
@@ -1591,7 +1599,17 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		
 	}
 
-	
+	public void setPrivilege(int arg0, String arg1, Class arg2, Long[] arg3, Long arg4, SessionDataBean arg5, String arg6, boolean arg7, boolean arg8) throws BizLogicException
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void update(Object arg0) throws BizLogicException
+	{
+		// TODO Auto-generated method stub
+		
+	}
 
 	public void update(Object arg0, int arg1) throws BizLogicException
 	{
@@ -1599,10 +1617,17 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		
 	}
 
-	
+	public void update(Object arg0, Object arg1, SessionDataBean arg2) throws BizLogicException
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void update(Object arg0, Object arg1, int arg2, SessionDataBean arg3) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
 		
 	}*/
+
+	
 }

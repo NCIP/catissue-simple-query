@@ -74,6 +74,9 @@ public class Constants
 	public static final String CELL = "Cell";
 	public static final String FLUID = "Fluid";
 	
+	public static final String ANY = "Any";
+	
+	public static final String TABLE_ALIAS_NAME = "aliasName";
 	
 
 }
