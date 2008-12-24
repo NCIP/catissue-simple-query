@@ -27,7 +27,8 @@ public class Client extends AbstractClient
 
 	public static void initialize()
 	{
-		QueryBizLogic.initializeQueryData();
+		QueryBizLogic querBizLogic = new QueryBizLogic();
+		querBizLogic.initializeQueryData();
 		//        objectTableNames = QueryBizLogic.getQueryObjectNameTableNameMap();
 		//        relationConditionsForRelatedTables = QueryBizLogic.getRelationData();
 	}

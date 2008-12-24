@@ -400,7 +400,7 @@ public class SearchUtil
 	 * @param bizLogic The object of class QueryBizLogic
 	 * @return a list of table names.
 	 */
-	public static List getEventParametersTables(QueryBizLogic bizLogic) throws DAOException,
+	/*public static List getEventParametersTables(QueryBizLogic bizLogic) throws DAOException,
 			ClassNotFoundException
 	{
 		Set tableSet = bizLogic.getAllTableNames("", Constants.ADVANCE_QUERY_TABLES);
@@ -423,7 +423,7 @@ public class SearchUtil
 		}
 
 		return newTableList;
-	}
+	}*/
 
 	public static Map getEventParametersDisplayNames(QueryBizLogic bizLogic, List tableList)
 			throws DAOException, ClassNotFoundException
