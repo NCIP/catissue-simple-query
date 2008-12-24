@@ -40,10 +40,10 @@ public class QueryFactory
 		{
 			return new SimpleQuery(queryStartObject);
 		}
-		else if (queryType.equals(Query.ADVANCED_QUERY))
+		/*else if (queryType.equals(Query.ADVANCED_QUERY))
 		{
 			return new AdvancedQuery(queryStartObject);
-		}
+		}*/
 		else
 		{
 			return null;
