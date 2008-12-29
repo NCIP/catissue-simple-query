@@ -1,5 +1,5 @@
 
-package edu.wustl.common.query;
+package edu.wustl.simplequery.query;
 
 import java.util.Collection;
 import java.util.Iterator;

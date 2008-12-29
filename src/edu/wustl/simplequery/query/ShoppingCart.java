@@ -8,7 +8,7 @@
  * Created on Apr 7, 2005
  */
 
-package edu.wustl.common.query;
+package edu.wustl.simplequery.query;
 
 import java.util.Hashtable;
 

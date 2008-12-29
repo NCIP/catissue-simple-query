@@ -1,5 +1,5 @@
 
-package edu.wustl.common.query;
+package edu.wustl.simplequery.query;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

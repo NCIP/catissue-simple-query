@@ -23,11 +23,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import edu.wustl.common.actionForm.AbstractActionForm;
-import edu.wustl.common.actionForm.SimpleQueryInterfaceForm;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.Validator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.simplequery.actionForm.SimpleQueryInterfaceForm;
 import edu.wustl.simplequery.bizlogic.QueryBizLogic;
 import edu.wustl.simplequery.global.Constants;
 

@@ -8,7 +8,7 @@
  * @version 1.00
  */
 
-package edu.wustl.common.actionForm;
+package edu.wustl.simplequery.actionForm;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,9 +27,9 @@ import org.apache.struts.action.ActionMapping;
 import edu.wustl.common.datatypes.DataTypeConfigFactory;
 import edu.wustl.common.datatypes.IDBDataType;
 import edu.wustl.common.exception.ParseException;
-import edu.wustl.common.query.Operator;
 import edu.wustl.common.util.global.Validator;
 import edu.wustl.simplequery.global.Constants;
+import edu.wustl.simplequery.query.Operator;
 
 /**
  * SimpleQueryInterfaceForm Class is used to encapsulate all the request parameters passed.

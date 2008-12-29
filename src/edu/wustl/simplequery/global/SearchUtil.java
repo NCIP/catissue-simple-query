@@ -20,12 +20,12 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import edu.wustl.common.beans.NameValueBean;
-import edu.wustl.common.query.Operator;
 import edu.wustl.common.vo.HTMLField;
 import edu.wustl.common.vo.SearchFieldData;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.simplequery.bizlogic.QueryBizLogic;
 import edu.wustl.simplequery.global.Constants;
+import edu.wustl.simplequery.query.Operator;
 
 /**
  * @author aniruddha_phadnis

@@ -7,7 +7,7 @@
  *@version 1.0
  */
 
-package edu.wustl.common.query;
+package edu.wustl.simplequery.query;
 
 /**
  * @author aarti_sharma

@@ -9,7 +9,7 @@
  * Created on Nov 22, 2005
  */
 
-package edu.wustl.common.query;
+package edu.wustl.simplequery.query;
 
 import java.util.HashMap;
 import java.util.List;
