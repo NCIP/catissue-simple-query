@@ -1,5 +1,5 @@
 
-package edu.wustl.common.querysuite.factory;
+package edu.wustl.simplequery.querysuite.factory;
 
 import edu.wustl.common.util.Utility;
 

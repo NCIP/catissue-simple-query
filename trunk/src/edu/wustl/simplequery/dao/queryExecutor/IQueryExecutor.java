@@ -1,4 +1,4 @@
-package edu.wustl.common.dao.queryExecutor;
+package edu.wustl.simplequery.dao.queryExecutor;
 
 import java.sql.Connection;
 import java.util.Map;

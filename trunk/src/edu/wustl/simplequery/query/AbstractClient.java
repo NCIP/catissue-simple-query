@@ -5,7 +5,7 @@
  * Window - Preferences - Java - Code Style - Code Templates
  */
 
-package edu.wustl.common.query;
+package edu.wustl.simplequery.query;
 
 import java.util.HashMap;
 

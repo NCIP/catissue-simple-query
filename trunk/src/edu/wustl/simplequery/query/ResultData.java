@@ -7,7 +7,7 @@
  * @version 1.00
  */
 
-package edu.wustl.common.query;
+package edu.wustl.simplequery.query;
 
 import java.util.ArrayList;
 import java.util.List;
