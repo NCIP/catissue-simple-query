@@ -9,17 +9,12 @@
 
 package edu.wustl.simplequery.query;
 
-import java.sql.SQLException;
 import java.util.Vector;
-
-import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.logging.Logger;
 
 import org.apache.log4j.PropertyConfigurator;
 
 import edu.wustl.common.util.global.CommonServiceLocator;
-import edu.wustl.common.util.global.Constants;
-import edu.wustl.common.util.global.Variables;
-import edu.wustl.common.util.logger.Logger;
 import edu.wustl.simplequery.bizlogic.QueryBizLogic;
 
 public class Client extends AbstractClient
@@ -248,11 +243,11 @@ public class Client extends AbstractClient
 	{
 		String appHome = CommonServiceLocator.getInstance().getAppHome();
 		//Variables.applicationHome = System.getProperty("user.dir");
-		Logger.out = org.apache.log4j.Logger.getLogger("");
+		//Logger.out = org.apache.log4j.Logger.getLogger("");
 		PropertyConfigurator.configure(appHome + "\\WEB-INF\\src\\"
 				+ "ApplicationResources.properties");
 
-		Logger.out.debug("here");
+		//Logger.out.debug("here");
 		initialize();
 		//        relations.put(Query.PARTICIPANT,Query.ACCESSION);
 		//        relations.put(Query.ACCESSION,Query.SPECIMEN);
