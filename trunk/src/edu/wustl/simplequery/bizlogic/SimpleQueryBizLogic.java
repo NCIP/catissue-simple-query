@@ -20,16 +20,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import java.util.logging.Logger;
-
-import javax.net.ssl.SSLEngineResult.Status;
 
 import edu.wustl.common.beans.QueryResultObjectData;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
 import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.common.util.global.Status;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
-import edu.wustl.dao.daofactory.DAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.HibernateMetaData;
 import edu.wustl.simplequery.global.Constants;
@@ -232,7 +229,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 
 			for (int i = 0; i < objectFields.length; i++)
 			{
-				if (objectFields[i].getName().equals(Status.ACTIVITY_STATUS))
+				if (objectFields[i].getName().equals(edu.wustl.common.util.global.Status.ACTIVITY_STATUS))
 				{
 					activityStatusCondition = new SimpleConditionsNode();
 					activityStatusCondition.getCondition().getDataElement().setTableName(aliasName);

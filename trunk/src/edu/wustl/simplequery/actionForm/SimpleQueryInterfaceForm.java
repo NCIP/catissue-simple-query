@@ -275,7 +275,10 @@ public class SimpleQueryInterfaceForm extends ActionForm
 		}
 		catch (ParseException e)
 		{
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (ApplicationException e)
+		{
 			e.printStackTrace();
 		}
 

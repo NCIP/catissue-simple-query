@@ -77,6 +77,7 @@ public class Constants
 	public static final String ANY = "Any";
 	
 	public static final String TABLE_ALIAS_NAME = "aliasName";
-	
+	public static final String AND_JOIN_CONDITION = "AND";
+	public static final String REPORTED_PROBLEM_CLASS_NAME = "edu.wustl.catissuecore.domain.ReportedProblem";
 
 }
