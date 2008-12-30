@@ -757,7 +757,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 		String tableAlias;
 		QueryResultObjectData queryResultObjectData;
 		QueryBizLogic bizLogic = new QueryBizLogic();
-		List<String> mainObjectsOfQuery = bizLogic.getMainObjectsOfQuery();
+		List<String> mainQueryObjects = bizLogic.getMainObjectsOfQuery();
 		
 		Logger.out.debug(" tables in query:" + fromTables);
 		while (iterator.hasNext())
