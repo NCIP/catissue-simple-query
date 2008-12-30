@@ -684,8 +684,8 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 		Iterator keyIterator = keySet.iterator();
 		QueryResultObjectData queryResultObjectData2;
 		QueryResultObjectData queryResultObjectData3;
-		Vector queryObjects;
-		Vector queryObjectNames;
+		List queryObjects;
+		List queryObjectNames;
 		int initialColumnNumbers = query.getResultView().size();
 		Map columnIdsMap;
 
@@ -721,7 +721,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 		Iterator keyIterator;
 		QueryResultObjectData queryResultObjectData2;
 		QueryResultObjectData queryResultObjectData3;
-		Vector queryObjects;
+		List queryObjects;
 		Set keySet2 = queryResultObjectDataMap.keySet();
 		keyIterator = keySet2.iterator();
 		for (int i = 0; keyIterator.hasNext(); i++)

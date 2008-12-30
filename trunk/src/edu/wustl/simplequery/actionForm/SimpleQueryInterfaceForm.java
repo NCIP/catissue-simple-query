@@ -26,6 +26,7 @@ import org.apache.struts.action.ActionMapping;
 
 import edu.wustl.common.datatypes.DataTypeConfigFactory;
 import edu.wustl.common.datatypes.IDBDataType;
+import edu.wustl.common.exception.ApplicationException;
 import edu.wustl.common.exception.ParseException;
 import edu.wustl.common.util.global.Validator;
 import edu.wustl.simplequery.global.Constants;
@@ -336,8 +337,9 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	 * @param integerValue integer Value.
 	 * @return conditionError.
 	 * @throws ParseException 
+	 * @throws ApplicationException 
 	 */
-	private boolean validateOperatorValue(ActionErrors errors, int integerValue) throws ParseException
+	private boolean validateOperatorValue(ActionErrors errors, int integerValue) throws ParseException, ApplicationException
 	{
 		boolean conditionError = false;
 		Validator validator = new Validator();
@@ -360,8 +362,9 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	 * @param integerValue integer Value for key generation.
 	 * @return conditionError
 	 * @throws ParseException 
+	 * @throws ApplicationException 
 	 */
-	private boolean validateCondition(ActionErrors errors, int integerValue) throws ParseException
+	private boolean validateCondition(ActionErrors errors, int integerValue) throws ParseException, ApplicationException
 	{
 		boolean conditionError;
 		String keyString = "SimpleConditionsNode:#_Condition_value";
@@ -410,8 +413,9 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	 * @param errors ActionErrors.
 	 * @return returns true if valid data type else false.
 	 * @throws ParseException 
+	 * @throws ApplicationException 
 	 */
-	private boolean validateDataType(String dataType, String enteredValue, ActionErrors errors) throws ParseException
+	private boolean validateDataType(String dataType, String enteredValue, ActionErrors errors) throws ParseException, ApplicationException
 	{
 		IDBDataType dbDataType = DataTypeConfigFactory.getInstance()
 				.getDataType(dataType);
