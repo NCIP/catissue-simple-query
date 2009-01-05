@@ -45,6 +45,7 @@ import edu.wustl.simplequery.query.Operator;
 import edu.wustl.simplequery.query.Query;
 import edu.wustl.simplequery.query.Relation;
 import edu.wustl.simplequery.query.RelationCondition;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.global.QuerySessionData;
 import edu.wustl.common.util.global.Variables;
 import edu.wustl.common.util.logger.Logger;
@@ -128,7 +129,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		JDBCDAO dao = null;
 		try
 		{
-			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+			String appName=CommonServiceLocator.getInstance().getAppName();
+			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			dao = daofactory.getJDBCDAO();
 			
 			dao.openSession(null);
@@ -173,7 +175,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		JDBCDAO dao = null;
 		try
 		{
-			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+			String appName=CommonServiceLocator.getInstance().getAppName();
+			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			dao = daofactory.getJDBCDAO();
 			dao.openSession(null);
 			list = dao.executeQuery(ALIAS_NAME_PRIVILEGE_TYPE_MAP_QUERY, null, false, null);
@@ -231,7 +234,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		HashMap relationConditionsForRelatedTables = new HashMap();
 		try
 		{
-			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+			String appName=CommonServiceLocator.getInstance().getAppName();
+			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			dao = daofactory.getJDBCDAO();
 			dao.openSession(null);
 			list = dao.executeQuery(GET_RELATION_DATA, null, false, null);
@@ -356,7 +360,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	 */
 	public String getAliasName(String columnName, Object columnValue) throws DAOException
 	{
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDAO  = daofactory.getJDBCDAO();
 		
 		jdbcDAO.openSession(null);
@@ -416,7 +421,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 
 		logger.debug("SQL*****************************" + sql);
 
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
 		
 		
@@ -478,7 +484,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 
 		logger.debug("TABLE SQL*****************************" + sql);
 
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
 		
 		jdbcDao.openSession(null);
@@ -541,7 +548,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 				+ " where TABLE_R.PARENT_TABLE_ID = TABLE_A.TABLE_ID and "
 				+ " TABLE_R.CHILD_TABLE_ID = TABLE_B.TABLE_ID ";
 
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
 		jdbcDao.openSession(null);
 		List checkList = jdbcDao.executeQuery(sql, null, false, null);
@@ -585,7 +593,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	{
 		String prevValueDisplayName = null;
 
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDAO = daofactory.getJDBCDAO();
 		jdbcDAO.openSession(null);
 		String sql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where ALIAS_NAME='"
@@ -613,7 +622,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	{
 		String prevValueDisplayName = null;
 
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDAO = daofactory.getJDBCDAO();
 		jdbcDAO.openSession(null);
 		String sql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where TABLE_NAME='"
@@ -660,7 +670,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			whereColumnValues[1] = alias;
 		}
 
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDAO = daofactory.getJDBCDAO();
 		jdbcDAO.openSession(null);
 		
@@ -708,7 +719,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		JDBCDAO dao = null;
 		try
 		{
-			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+			String appName=CommonServiceLocator.getInstance().getAppName();
+			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			dao = daofactory.getJDBCDAO();
 			dao.openSession(null);
 			list = dao.executeQuery(sql, null, false, null);
@@ -760,7 +772,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		JDBCDAO dao = null;
 		try
 		{
-			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+			String appName=CommonServiceLocator.getInstance().getAppName();
+			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			dao = daofactory.getJDBCDAO();
 			dao.openSession(null);
 			list = dao.executeQuery(GET_RELATED_TABLE_ALIAS_PART1 + "'" + aliasName + "'"
@@ -816,7 +829,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 
 		logger.debug("SQL*****************************" + sql);
 
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
 		jdbcDao.openSession(null);
 		List list = jdbcDao.executeQuery(sql, null, false, null);
@@ -862,7 +876,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 				+ aliasName + "' ";
 		logger.debug("SQL*****************************" + sql);
 
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
 		
 		
@@ -889,7 +904,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	public String getTableIdFromAliasName(String aliasName) throws DAOException
 	{
 
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDAO = daofactory.getJDBCDAO();
 		jdbcDAO.openSession(null);
 		String[] selectColumnNames = {"TABLE_ID"};
@@ -959,7 +975,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	{
 		logger.debug("SQL*****************************" + sql);
 
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
 		
 		jdbcDao.openSession(null);
@@ -1077,7 +1094,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		try
 		{
 			// Database connection established
-			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+			String appName=CommonServiceLocator.getInstance().getAppName();
+			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			jdbcDAO = daofactory.getJDBCDAO();
 			
 			jdbcDAO.openSession(null);
@@ -1229,8 +1247,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	{
 
 		
-		
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		 JDBCDAO jdbcDAO = daofactory.getJDBCDAO();
 		try
 		{
@@ -1288,7 +1306,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	public PagenatedResultData execute(SessionDataBean sessionDataBean,
 			QuerySessionData querySessionData, int startIndex) throws DAOException
 	{
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO dao = daofactory.getJDBCDAO();
 		
 		try
@@ -1337,7 +1356,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	{
 		logger.debug("SQL to get cardinality between 2 entities... " + sql);
 
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
 		
 		jdbcDao.openSession(null);

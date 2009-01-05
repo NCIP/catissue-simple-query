@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 import edu.wustl.simplequery.global.Constants;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
@@ -101,8 +102,8 @@ public class DataElement implements Serializable
 	 */
 	public String toSQLString(int tableSufix) throws SQLException
 	{
-		
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO dao;
 		String fieldName = "";
 		try

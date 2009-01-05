@@ -9,6 +9,7 @@ import java.util.Date;
 import edu.wustl.common.cde.CDEManager;
 import edu.wustl.common.util.Utility;
 import edu.wustl.simplequery.global.Constants;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
@@ -300,8 +301,8 @@ public class Condition
 				Date date = new Date();
 				date = Utility.parseDate(newValue);
 				
-				
-				IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+				String appName=CommonServiceLocator.getInstance().getAppName();
+				IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 				JDBCDAO dao = daofactory.getJDBCDAO();
 				
 
