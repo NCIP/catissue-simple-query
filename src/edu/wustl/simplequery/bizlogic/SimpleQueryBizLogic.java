@@ -24,6 +24,7 @@ import java.util.Vector;
 import edu.wustl.common.beans.QueryResultObjectData;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
 import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.global.Status;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
@@ -427,7 +428,8 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 		String displayColumnName = null;
 		try
 		{
-			JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory().
+			String appName=CommonServiceLocator.getInstance().getAppName();
+			JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory(appName).
 			getJDBCDAO();
 			jdbcDAO.openSession(null);			
 			
@@ -541,7 +543,8 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 		Vector vector = new Vector();
 		try
 		{
-			JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory().
+			String appName=CommonServiceLocator.getInstance().getAppName();
+			JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory(appName).
 			getJDBCDAO();
 			
 			Iterator aliasNameIterator = aliasNameList.iterator();
@@ -785,7 +788,9 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 	public Map<Integer, QueryResultObjectData> getHyperlinkMap(Map<String,QueryResultObjectData> queryResultsObjectDataMap, Vector<DataElement> resultView) throws DAOException
 	{
 		Map<Integer, QueryResultObjectData> map = new HashMap<Integer, QueryResultObjectData>();
-		JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory().
+		
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory(appName).
 		getJDBCDAO();
 
 		try 
@@ -896,7 +901,8 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 	public String getTableName(String aliasName) throws DAOException, ClassNotFoundException
 	{
 		String tableName = new String();
-		JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory().
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory(appName).
 		getJDBCDAO();
 		jdbcDAO.openSession(null);
 		String sql = "select TABLE_NAME from CATISSUE_QUERY_TABLE_DATA where ALIAS_NAME='"
@@ -922,7 +928,8 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 	public String getAliasName(String tableName) throws DAOException, ClassNotFoundException
 	{
 		String aliasName = new String();
-		JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory().
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory(appName).
 		getJDBCDAO();
 		jdbcDAO.openSession(null);
 		String sql = "select ALIAS_NAME from CATISSUE_QUERY_TABLE_DATA where TABLE_NAME='"

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
@@ -34,7 +35,8 @@ public class QueryDataCache
 	 */
 	public static Map getQueryData() throws DAOException
 	{
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		DAO dao = daofactory.getDAO();
 		
 

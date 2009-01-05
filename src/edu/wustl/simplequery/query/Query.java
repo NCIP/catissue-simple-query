@@ -17,6 +17,7 @@ import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.Utility;
 import edu.wustl.simplequery.global.Constants;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
@@ -229,7 +230,8 @@ public abstract class Query
 	{
 		try
 		{
-			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+			String appName=CommonServiceLocator.getInstance().getAppName();
+			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			JDBCDAO dao = daofactory.getJDBCDAO();
 			dao.openSession(null);
 			String sql = getString();
@@ -888,7 +890,8 @@ public abstract class Query
 		Set relatedTableNames = new HashSet();
 		try
 		{
-			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+			String appName=CommonServiceLocator.getInstance().getAppName();
+			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			JDBCDAO dao = daofactory.getJDBCDAO();
 			dao.openSession(null);
 			// Commenting this variable as its not used in code.			

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.wustl.common.beans.SessionDataBean;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.simplequery.global.Constants;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.QueryWhereClause;
@@ -56,7 +57,8 @@ public class ResultData
 			Logger.out.debug("arrayvalues:"+whereColumnName[0]+":"+whereColumnName[1]+":"+whereColumnValue[0]+":"+whereColumnValue[1]);*/
 		List dataList = new ArrayList();
 		//Bug#2003: For having unique records in result view
-		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory();
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO dao = null;
 		try
 		{
