@@ -126,12 +126,12 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	{
 		List list = null;
 		HashMap queryObjectNameTableNameMap = new HashMap();
-		JDBCDAO dao = null;
+		DAO dao = null;
 		try
 		{
 			String appName=CommonServiceLocator.getInstance().getAppName();
 			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
-			dao = daofactory.getJDBCDAO();
+			dao = daofactory.getDAO();
 			
 			dao.openSession(null);
 			list = dao.executeQuery(ALIAS_NAME_TABLE_NAME_MAP_QUERY);
