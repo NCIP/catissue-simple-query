@@ -671,8 +671,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			whereColumnConditions[1] = "=";
 			whereColumnValues = new String[2];
 			whereColumnValues[0] = String.valueOf(forQI);
-			String alias = "'" + aliasName + "'";
-			whereColumnValues[1] = alias;
+			//String alias = "'" + aliasName + "'";
+			whereColumnValues[1] = aliasName;
 		}
 
 		String appName=CommonServiceLocator.getInstance().getAppName();
@@ -682,7 +682,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		
 		QueryWhereClause queryWhereClause = new QueryWhereClause(Constants.TABLE_DATA_TABLE_NAME);
 		queryWhereClause.getWhereCondition(whereColumnNames, whereColumnConditions,
-				whereColumnValues,null);
+				whereColumnValues,Constants.AND_JOIN_CONDITION);
 		
 		List tableList = jdbcDAO.retrieve(Constants.TABLE_DATA_TABLE_NAME, selectColumnNames,
 				queryWhereClause);
