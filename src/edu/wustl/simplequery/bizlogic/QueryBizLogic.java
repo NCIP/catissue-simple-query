@@ -36,6 +36,7 @@ import edu.wustl.common.bizlogic.IQueryBizLogic;
 import edu.wustl.common.domain.AbstractDomainObject;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.exception.ErrorKey;
+import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.simplequery.global.Constants;
@@ -126,15 +127,16 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	{
 		List list = null;
 		HashMap queryObjectNameTableNameMap = new HashMap();
-		DAO dao = null;
+		JDBCDAO jdbcDAO = null;
 		try
 		{
 			String appName=CommonServiceLocator.getInstance().getAppName();
 			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
-			dao = daofactory.getDAO();
+			jdbcDAO = daofactory.getJDBCDAO();
 			
-			dao.openSession(null);
-			list = dao.executeQuery(ALIAS_NAME_TABLE_NAME_MAP_QUERY);
+			jdbcDAO.openSession(null);
+			list = jdbcDAO.executeQuery(ALIAS_NAME_TABLE_NAME_MAP_QUERY,null,
+					false, null);
 
 			Iterator iterator = list.iterator();
 			while (iterator.hasNext())
@@ -148,12 +150,15 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		{
 			logger.debug("Could not obtain table object relation. Exception: "
 					+ daoExp.getMessage(), daoExp);
+		} catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
 		}
 		finally
 		{
 			try
 			{
-				dao.closeSession();
+				jdbcDAO.closeSession();
 			}
 			catch (DAOException e)
 			{
