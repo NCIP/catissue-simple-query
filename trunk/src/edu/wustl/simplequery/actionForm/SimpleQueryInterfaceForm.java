@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -239,7 +240,7 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	 * @return ActionErrors.
 	 * @throws ParseException 
 	 */
-	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) 
+	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request)
 	{
 		ActionErrors errors = new ActionErrors();
 		//if the operation is AND / OR.
@@ -342,15 +343,15 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	 * @throws ParseException 
 	 * @throws ApplicationException 
 	 */
-	private boolean validateOperatorValue(ActionErrors errors, int integerValue) throws ParseException, ApplicationException
+	private boolean validateOperatorValue(ActionErrors errors, int integerValue)
+			throws ParseException, ApplicationException
 	{
 		boolean conditionError = false;
-		Validator validator = new Validator();
 		String key = "SimpleConditionsNode:#_Condition_Operator_operator";
 		String newKey = replaceAll(key, "#", Integer.toString(integerValue));
 		StringBuffer operatorKey = new StringBuffer(newKey);
 		String operatorValue = (String) getValue(operatorKey.toString());
-		if (!validator.isEmpty(operatorValue)
+		if (!Validator.isEmpty(operatorValue)
 				&& !(operatorValue.equals(Operator.IS_NULL) || operatorValue
 						.equals(Operator.IS_NOT_NULL)))
 		{
@@ -364,10 +365,11 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	 * @param errors ActionErrors object.
 	 * @param integerValue integer Value for key generation.
 	 * @return conditionError
-	 * @throws ParseException 
-	 * @throws ApplicationException 
+	 * @throws ParseException Parse Exception.
+	 * @throws ApplicationException Application Exception.
 	 */
-	private boolean validateCondition(ActionErrors errors, int integerValue) throws ParseException, ApplicationException
+	private boolean validateCondition(ActionErrors errors, int integerValue) throws ParseException,
+			ApplicationException
 	{
 		boolean conditionError;
 		String keyString = "SimpleConditionsNode:#_Condition_value";
@@ -376,9 +378,21 @@ public class SimpleQueryInterfaceForm extends ActionForm
 		String dataElement = "SimpleConditionsNode:#_Condition_DataElement_field";
 		String dataElementKey = replaceAll(dataElement, "#", Integer.toString(integerValue));
 		String selectedField = (String) getValue(dataElementKey);
-		String[] selectedFieldsArray = selectedField.split(".");
-
-		String dataType = selectedFieldsArray[INDEX_FOR_DATA_TYPE];
+		StringTokenizer strTok = new StringTokenizer(selectedField, ".");
+		int tokenCnt = 1;
+		String dataType = "";
+		while (strTok.hasMoreTokens())
+		{
+			if (tokenCnt == INDEX_FOR_DATA_TYPE)
+			{
+				dataType = strTok.nextToken();
+			}
+			else
+			{
+				strTok.nextToken();
+			}
+			tokenCnt++;
+		}
 		conditionError = validateDataType(dataType, enteredValue, errors);
 		return conditionError;
 	}
@@ -418,10 +432,10 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	 * @throws ParseException 
 	 * @throws ApplicationException 
 	 */
-	private boolean validateDataType(String dataType, String enteredValue, ActionErrors errors) throws ParseException, ApplicationException
+	private boolean validateDataType(String dataType, String enteredValue, ActionErrors errors)
+			throws ParseException, ApplicationException
 	{
-		IDBDataType dbDataType = DataTypeConfigFactory.getInstance()
-				.getDataType(dataType);
+		IDBDataType dbDataType = DataTypeConfigFactory.getInstance().getDataType(dataType);
 		return dbDataType.validate(enteredValue, errors);
 	}
 
