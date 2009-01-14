@@ -79,5 +79,13 @@ public class Constants
 	public static final String TABLE_ALIAS_NAME = "aliasName";
 	public static final String AND_JOIN_CONDITION = "AND";
 	public static final String REPORTED_PROBLEM_CLASS_NAME = "edu.wustl.catissuecore.domain.ReportedProblem";
-
+	public static final String PAGEOF_SIMPLE_QUERY_INTERFACE = "pageOfSimpleQueryInterface";
+	public static final String IDENTIFIER_FIELD_INDEX = "identifierFieldIndex";
+	public static final String SIMPLE_QUERY_NO_RESULTS = "noResults";
+	public static final String SEARCH_OBJECT_ACTION = "/SearchObject.do";
+	public static final String SEARCH = "search";
+	public static final String SIMPLE_QUERY_SINGLE_RESULT = "singleResult";
+	public static final String SPREADSHEET_DATA_LIST = "spreadsheetDataList";
+	public static final String SPREADSHEET_COLUMN_LIST = "spreadsheetColumnList";
+	public static final String IS_SIMPLE_SEARCH = "isSimpleSearch";
 }
