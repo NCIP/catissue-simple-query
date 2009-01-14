@@ -785,7 +785,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 	 * Patch ID: SimpleSearchEdit_2 
 	 * Description: Method to get the Map which contains information about which columns to be Hyperlinked.
 	 */
-	public Map<Integer, QueryResultObjectData> getHyperlinkMap(Map<String,QueryResultObjectData> queryResultsObjectDataMap, Vector<DataElement> resultView) throws DAOException
+	public Map<Integer, QueryResultObjectData> getHyperlinkMap(Map<String,QueryResultObjectData> queryResultsObjectDataMap, List<DataElement> resultView) throws DAOException
 	{
 		Map<Integer, QueryResultObjectData> map = new HashMap<Integer, QueryResultObjectData>();
 		
@@ -863,7 +863,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 	 * @param columnName the name of the column to search.
 	 * @return -1 if no such data element exists in the resultview else return the index of it.
 	 */
-	private int getIndex(Vector<DataElement> resultView, String alias, String columnName)
+	private int getIndex(List<DataElement> resultView, String alias, String columnName)
 	{
 		for (int index = 0; index < resultView.size(); index++)
 		{
