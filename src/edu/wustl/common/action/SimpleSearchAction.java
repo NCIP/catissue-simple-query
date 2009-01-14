@@ -118,7 +118,7 @@ public class SimpleSearchAction extends BaseAction
 		session.setAttribute(Constants.SIMPLE_QUERY_MAP, map);
 		Logger.out.debug("map after setting in session" + map);
 
-		MapDataParser parser = new MapDataParser("edu.wustl.common.query");
+		MapDataParser parser = new MapDataParser("edu.wustl.simplequery.query");
 		Collection simpleConditionNodeCollection = parser.generateData(map, true);
 
 		/**
