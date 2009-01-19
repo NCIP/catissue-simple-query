@@ -407,19 +407,10 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	public static String replaceAll(String source, String toReplace, String replacement)
 	{
 		String sourceString = source;
-		int idx = sourceString.lastIndexOf(toReplace);
-		if (idx != -1)
+		if (sourceString.contains(toReplace))
 		{
-			StringBuffer ret = new StringBuffer(sourceString);
-			ret.replace(idx, idx + toReplace.length(), replacement);
-			idx = sourceString.lastIndexOf(toReplace, idx - 1);
-			while (idx != -1)
-			{
-				ret.replace(idx, idx + toReplace.length(), replacement);
-			}
-			sourceString = ret.toString();
+			sourceString = sourceString.replace(toReplace, replacement);
 		}
-
 		return sourceString;
 	}
 
