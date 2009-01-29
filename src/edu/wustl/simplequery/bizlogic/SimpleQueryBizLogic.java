@@ -546,6 +546,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 			String appName=CommonServiceLocator.getInstance().getAppName();
 			JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory(appName).
 			getJDBCDAO();
+			jdbcDAO.openSession(null);
 			
 			Iterator aliasNameIterator = aliasNameList.iterator();
 			while (aliasNameIterator.hasNext())
