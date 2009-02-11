@@ -227,7 +227,7 @@ public abstract class Query
 	public PagenatedResultData execute(SessionDataBean sessionDataBean, boolean isSecureExecute,
 			Map queryResultObjectDataMap, boolean hasConditionOnIdentifiedField, int startIndex,
 			int totoalRecords) throws DAOException, SQLException
-	{
+	{/*
 		try
 		{
 			String appName=CommonServiceLocator.getInstance().getAppName();
@@ -263,7 +263,9 @@ public abstract class Query
 			ErrorKey errorKey = ErrorKey.getErrorKey("simple.query.error");
 			throw new DAOException(errorKey,classExp ,"SpecimenCollectionGroup.java :");
 		}
-	}
+	*/
+		return null;
+		}
 
 	/**
 	 * Adds the dataElement to result view.
@@ -901,7 +903,7 @@ public abstract class Query
 			//					+ "where relationData.PARENT_TABLE_ID = tableData.TABLE_ID and tableData.ALIAS_NAME = '"
 			//					+ aliasName
 			//					+ "') as relatedTables  on relatedTables.CHILD_TABLE_ID = tableData2.TABLE_ID";
-			list = dao.executeQuery(getString(), null, false, null);
+			list = dao.executeQuery(getString());
 
 			Iterator iterator = list.iterator();
 			while (iterator.hasNext())
@@ -917,11 +919,7 @@ public abstract class Query
 			Logger.out.debug("Could not obtain related tables. Exception:" + daoExp.getMessage(),
 					daoExp);
 		}
-		catch (ClassNotFoundException classExp)
-		{
-			Logger.out.debug("Could not obtain related tables. Exception:" + classExp.getMessage(),
-					classExp);
-		}
+		
 		Logger.out.debug("Tables related to " + aliasName + " " + relatedTableNames.toString());
 		return relatedTableNames;
 	}

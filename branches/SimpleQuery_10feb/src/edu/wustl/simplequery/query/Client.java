@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import org.apache.log4j.PropertyConfigurator;
 
+import edu.wustl.common.util.global.AbstractClient;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.simplequery.bizlogic.QueryBizLogic;
 

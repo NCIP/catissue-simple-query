@@ -426,9 +426,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 	private String getColumnDisplayName(String childTableAliasName, String columnName,String parentTableAliasName) throws DAOException
 	{
 		String displayColumnName = null;
-		try
-		{
-			String appName=CommonServiceLocator.getInstance().getAppName();
+		String appName=CommonServiceLocator.getInstance().getAppName();
 			JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory(appName).
 			getJDBCDAO();
 			jdbcDAO.openSession(null);			
@@ -449,10 +447,10 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 
 		
 
-			List list = jdbcDAO.executeQuery(sql, null, false, null);
+			List list = jdbcDAO.executeQuery(sql);
 			String nameSql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where ALIAS_NAME='"
 					+ parentTableAliasName + "'";
-			List nameList = jdbcDAO.executeQuery(nameSql, null, false, null);
+			List nameList = jdbcDAO.executeQuery(nameSql);
 			String tableDisplayName = new String();
 			if (!nameList.isEmpty())
 			{
@@ -467,13 +465,6 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 				displayColumnName = (String) rowList.get(0) + " : " + tableDisplayName;
 			}		
 			jdbcDAO.closeSession();
-		}
-		catch (ClassNotFoundException classExp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("simple.query.error");
-			throw new DAOException(errorKey,classExp,"SimpleQueryBizLogic.java :");
-			
-		}	
 		return displayColumnName;
 	}
 	
@@ -541,9 +532,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 			throws DAOException
 	{
 		Vector vector = new Vector();
-		try
-		{
-			String appName=CommonServiceLocator.getInstance().getAppName();
+		String appName=CommonServiceLocator.getInstance().getAppName();
 			JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory(appName).
 			getJDBCDAO();
 			jdbcDAO.openSession(null);
@@ -579,10 +568,10 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 
 				
 
-				List list = jdbcDAO.executeQuery(sql, null, false, null);
+				List list = jdbcDAO.executeQuery(sql);
 				String nameSql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where ALIAS_NAME='"
 						+ aliasName + "'";
-				List nameList = jdbcDAO.executeQuery(nameSql, null, false, null);
+				List nameList = jdbcDAO.executeQuery(nameSql);
 				String tableDisplayName = new String();
 				if (!nameList.isEmpty())
 				{
@@ -606,13 +595,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 				}
 			}
 			jdbcDAO.closeSession();
-		}
-		catch (ClassNotFoundException classExp)
-		{
-			ErrorKey errorKey = ErrorKey.getErrorKey("simple.query.error");
-			throw new DAOException(errorKey,classExp,"SimpleQueryBizLogic.java :");
 		
-		}
 		return vector;
 	}
 
@@ -908,7 +891,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 		jdbcDAO.openSession(null);
 		String sql = "select TABLE_NAME from CATISSUE_QUERY_TABLE_DATA where ALIAS_NAME='"
 				+ aliasName + "'";
-		List list = jdbcDAO.executeQuery(sql, null, false, null);
+		List list = jdbcDAO.executeQuery(sql);
 		jdbcDAO.closeSession();
 
 		if (!list.isEmpty())
@@ -935,7 +918,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 		jdbcDAO.openSession(null);
 		String sql = "select ALIAS_NAME from CATISSUE_QUERY_TABLE_DATA where TABLE_NAME='"
 				+ tableName + "'";
-		List list = jdbcDAO.executeQuery(sql, null, false, null);
+		List list = jdbcDAO.executeQuery(sql);
 		jdbcDAO.closeSession();
 
 		if (!list.isEmpty())
