@@ -16,13 +16,15 @@ import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
 import edu.wustl.common.util.Utility;
-import edu.wustl.simplequery.global.Constants;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.query.executor.AbstractQueryExecutor;
+import edu.wustl.security.exception.SMException;
+import edu.wustl.simplequery.global.Constants;
 
 
 /**
@@ -227,7 +229,7 @@ public abstract class Query
 	public PagenatedResultData execute(SessionDataBean sessionDataBean, boolean isSecureExecute,
 			Map queryResultObjectDataMap, boolean hasConditionOnIdentifiedField, int startIndex,
 			int totoalRecords) throws DAOException, SQLException
-	{/*
+	{
 		try
 		{
 			String appName=CommonServiceLocator.getInstance().getAppName();
@@ -245,8 +247,8 @@ public abstract class Query
 			queryParams.setQueryResultObjectDataMap(queryResultObjectDataMap);
 			queryParams.setStartIndex(startIndex);
 			queryParams.setNoOfRecords(totoalRecords);
-			
-			PagenatedResultData pagenatedResultData = dao.executeQuery(queryParams);
+			AbstractQueryExecutor queryExecutor = edu.wustl.query.util.global.Utility.getQueryExecutor();
+			PagenatedResultData pagenatedResultData = queryExecutor.getQueryResultList(queryParams);
 			
 			dao.closeSession();
 			return pagenatedResultData;
@@ -257,14 +259,13 @@ public abstract class Query
 			ErrorKey errorKey = ErrorKey.getErrorKey("simple.query.error");
 			throw new DAOException(errorKey,daoExp ,"SpecimenCollectionGroup.java :");
 		}
-		catch (ClassNotFoundException classExp)
+		catch (SMException classExp)
 		{
 //			have to change TBD
 			ErrorKey errorKey = ErrorKey.getErrorKey("simple.query.error");
 			throw new DAOException(errorKey,classExp ,"SpecimenCollectionGroup.java :");
 		}
-	*/
-		return null;
+	
 		}
 
 	/**

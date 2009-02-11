@@ -48,6 +48,8 @@ import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.query.generator.DBTypes;
 import edu.wustl.dao.query.generator.QueryGenerator;
+import edu.wustl.query.executor.AbstractQueryExecutor;
+import edu.wustl.security.exception.SMException;
 import edu.wustl.simplequery.global.Constants;
 import edu.wustl.simplequery.query.Client;
 import edu.wustl.simplequery.query.DataElement;
@@ -1451,7 +1453,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	 */
 	public PagenatedResultData execute(SessionDataBean sessionDataBean,
 			QuerySessionData querySessionData, int startIndex) throws DAOException
-	{/*
+	{
 		String appName=CommonServiceLocator.getInstance().getAppName();
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO dao = daofactory.getJDBCDAO();
@@ -1469,9 +1471,9 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			queryParams.setStartIndex(startIndex);
 			queryParams.setNoOfRecords(querySessionData.getRecordsPerPage());
 			
-			
-			PagenatedResultData pagenatedResultData = dao
-					.executeQuery(queryParams);
+			AbstractQueryExecutor queryExecutor = edu.wustl.query.util.global.Utility.getQueryExecutor();
+			PagenatedResultData pagenatedResultData = queryExecutor.getQueryResultList(queryParams);
+					
 
 			return pagenatedResultData;
 		}
@@ -1480,7 +1482,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			ErrorKey errorKey = ErrorKey.getErrorKey("simple.query.error");
 			throw new DAOException(errorKey,daoExp ,"QueryBizLogic.java :");
 		}
-		catch (ClassNotFoundException classExp)
+		catch (SMException classExp)
 		{
 			ErrorKey errorKey = ErrorKey.getErrorKey("simple.query.error");
 			throw new DAOException(errorKey,classExp ,"QueryBizLogic.java :");
@@ -1489,8 +1491,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		{
 			dao.closeSession();
 		}
-	*/
-		return null;	
+	
 	}
 
 	/**
