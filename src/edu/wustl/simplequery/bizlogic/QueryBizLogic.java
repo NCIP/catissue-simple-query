@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,17 +29,25 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import oracle.sql.CLOB;
-import edu.wustl.common.actionForm.IValueObject;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
 import edu.wustl.common.bizlogic.IQueryBizLogic;
-import edu.wustl.common.domain.AbstractDomainObject;
-import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.exception.ErrorKey;
-import edu.wustl.common.querydatabean.QueryDataBean;
 import edu.wustl.common.util.PagenatedResultData;
 import edu.wustl.common.util.QueryParams;
+import edu.wustl.common.util.global.CommonServiceLocator;
+import edu.wustl.common.util.global.QuerySessionData;
+import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.JDBCDAO;
+import edu.wustl.dao.QueryWhereClause;
+import edu.wustl.dao.condition.EqualClause;
+import edu.wustl.dao.daofactory.DAOConfigFactory;
+import edu.wustl.dao.daofactory.IDAOFactory;
+import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
+import edu.wustl.dao.query.generator.DBTypes;
+import edu.wustl.dao.query.generator.QueryGenerator;
 import edu.wustl.simplequery.global.Constants;
 import edu.wustl.simplequery.query.Client;
 import edu.wustl.simplequery.query.DataElement;
@@ -46,20 +55,6 @@ import edu.wustl.simplequery.query.Operator;
 import edu.wustl.simplequery.query.Query;
 import edu.wustl.simplequery.query.Relation;
 import edu.wustl.simplequery.query.RelationCondition;
-import edu.wustl.common.util.global.CommonServiceLocator;
-import edu.wustl.common.util.global.QuerySessionData;
-import edu.wustl.common.util.global.Variables;
-import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.DAO;
-import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.QueryWhereClause;
-import edu.wustl.dao.condition.EqualClause;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
-import edu.wustl.dao.daofactory.IDAOFactory;
-import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.sqlformatter.ColumnValueBean;
-import edu.wustl.dao.sqlformatter.SQLFormatter;
-import edu.wustl.dao.sqlformatter.Types;
 
 
 /**
@@ -135,8 +130,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			jdbcDAO = daofactory.getJDBCDAO();
 			
 			jdbcDAO.openSession(null);
-			list = jdbcDAO.executeQuery(ALIAS_NAME_TABLE_NAME_MAP_QUERY,null,
-					false, null);
+			list = jdbcDAO.executeQuery(ALIAS_NAME_TABLE_NAME_MAP_QUERY);
 
 			Iterator iterator = list.iterator();
 			while (iterator.hasNext())
@@ -150,9 +144,6 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		{
 			logger.debug("Could not obtain table object relation. Exception: "
 					+ daoExp.getMessage(), daoExp);
-		} catch (ClassNotFoundException e) 
-		{
-			e.printStackTrace();
 		}
 		finally
 		{
@@ -184,7 +175,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			dao = daofactory.getJDBCDAO();
 			dao.openSession(null);
-			list = dao.executeQuery(ALIAS_NAME_PRIVILEGE_TYPE_MAP_QUERY, null, false, null);
+			list = dao.executeQuery(ALIAS_NAME_PRIVILEGE_TYPE_MAP_QUERY);
 
 			Iterator iterator = list.iterator();
 			while (iterator.hasNext())
@@ -200,12 +191,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			logger.debug("Could not obtain table privilege map. Exception:" + daoExp.getMessage(),
 					daoExp);
 		}
-		catch (ClassNotFoundException classExp)
-		{
-			logger.debug(
-					"Could not obtain table privilege map. Exception:" + classExp.getMessage(),
-					classExp);
-		}
+		
 		finally
 		{
 			try
@@ -243,7 +229,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			dao = daofactory.getJDBCDAO();
 			dao.openSession(null);
-			list = dao.executeQuery(GET_RELATION_DATA, null, false, null);
+			list = dao.executeQuery(GET_RELATION_DATA);
 
 			Iterator iterator = list.iterator();
 
@@ -260,8 +246,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 					continue;
 				}
 
-				columnDataList = dao.executeQuery(GET_TABLE_ALIAS + parentTableColumnID, null,
-						false, null);
+				columnDataList = dao.executeQuery(GET_TABLE_ALIAS + parentTableColumnID);
 				if (columnDataList.size() <= 0)
 				{
 					continue;
@@ -273,8 +258,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 				}
 				tableAlias1 = (String) row.get(0);
 
-				columnDataList = dao.executeQuery(GET_TABLE_ALIAS + childTableColumnID, null,
-						false, null);
+				columnDataList = dao.executeQuery(GET_TABLE_ALIAS + childTableColumnID);
 				if (columnDataList.size() <= 0)
 				{
 					continue;
@@ -298,11 +282,6 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			logger.debug(
 					"Could not obtain table object relation. Exception:" + daoExp.getMessage(),
 					daoExp);
-		}
-		catch (ClassNotFoundException classExp)
-		{
-			logger.debug("Could not obtain table object relation. Exception:"
-					+ classExp.getMessage(), classExp);
 		}
 		finally
 		{
@@ -432,7 +411,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		
 		
 		jdbcDao.openSession(null);
-		List list = jdbcDao.executeQuery(sql, null, false, null);
+		List list = jdbcDao.executeQuery(sql);
 		jdbcDao.closeSession();
 
 		List columnNameValueBeanList = new ArrayList();
@@ -494,7 +473,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
 		
 		jdbcDao.openSession(null);
-		List list = jdbcDao.executeQuery(sql, null, false, null);
+		List list = jdbcDao.executeQuery(sql);
 		jdbcDao.closeSession();
 
 		//Adding NameValueBean of select option.
@@ -509,7 +488,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 
 		sql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where ALIAS_NAME='" + prevValue
 				+ "'";
-		List prevValueDisplayNameList = jdbcDao.executeQuery(sql, null, false, null);
+		List prevValueDisplayNameList = jdbcDao.executeQuery(sql);
 		jdbcDao.closeSession();
 
 		if (!prevValueDisplayNameList.isEmpty())
@@ -557,7 +536,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
 		jdbcDao.openSession(null);
-		List checkList = jdbcDao.executeQuery(sql, null, false, null);
+		List checkList = jdbcDao.executeQuery(sql);
 		jdbcDao.closeSession();
 
 		return checkList;
@@ -604,7 +583,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		jdbcDAO.openSession(null);
 		String sql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where ALIAS_NAME='"
 				+ aliasName + "'";
-		List list = jdbcDAO.executeQuery(sql, null, false, null);
+		List list = jdbcDAO.executeQuery(sql);
 		jdbcDAO.closeSession();
 
 		if (!list.isEmpty())
@@ -629,18 +608,26 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 
 		String appName=CommonServiceLocator.getInstance().getAppName();
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
-		JDBCDAO jdbcDAO = daofactory.getJDBCDAO();
-		jdbcDAO.openSession(null);
-		String sql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where TABLE_NAME='"
-				+ tableName + "'";
-		List list = jdbcDAO.executeQuery(sql, null, false, null);
-		jdbcDAO.closeSession();
-
-		if (!list.isEmpty())
+		JDBCDAO jdbcDAO = null;
+		try
 		{
-			List rowList = (List) list.get(0);
-			prevValueDisplayName = (String) rowList.get(0);
+			jdbcDAO = daofactory.getJDBCDAO();
+			jdbcDAO.openSession(null);
+			String sql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where TABLE_NAME='"
+				+ tableName + "'";
+			List list = jdbcDAO.executeQuery(sql);
+		
+			if (!list.isEmpty())
+			{
+				List rowList = (List) list.get(0);
+				prevValueDisplayName = (String) rowList.get(0);
+			}
 		}
+		finally
+		{
+			jdbcDAO.closeSession();
+
+		}	
 		return prevValueDisplayName;
 	}
 
@@ -728,7 +715,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			dao = daofactory.getJDBCDAO();
 			dao.openSession(null);
-			list = dao.executeQuery(sql, null, false, null);
+			list = dao.executeQuery(sql);
 
 			Iterator iterator = list.iterator();
 			while (iterator.hasNext())
@@ -743,11 +730,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		{
 			logger.debug("Could not obtain main objects. Exception:" + daoExp.getMessage(), daoExp);
 		}
-		catch (ClassNotFoundException classExp)
-		{
-			logger.debug("Could not obtain main objects. Exception:" + classExp.getMessage(),
-					classExp);
-		}
+		
 		finally
 		{
 			try
@@ -782,7 +765,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			dao = daofactory.getJDBCDAO();
 			dao.openSession(null);
 			list = dao.executeQuery(GET_RELATED_TABLE_ALIAS_PART1 + "'" + aliasName + "'"
-					+ GET_RELATED_TABLE_ALIAS_PART2, null, false, null);
+					+ GET_RELATED_TABLE_ALIAS_PART2);
 
 			Iterator iterator = list.iterator();
 			while (iterator.hasNext())
@@ -798,11 +781,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			logger.debug("Could not obtain related tables. Exception:" + daoExp.getMessage(),
 					daoExp);
 		}
-		catch (ClassNotFoundException classExp)
-		{
-			logger.debug("Could not obtain related tables. Exception:" + classExp.getMessage(),
-					classExp);
-		}
+		
 		finally
 		{
 			try
@@ -838,7 +817,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
 		jdbcDao.openSession(null);
-		List list = jdbcDao.executeQuery(sql, null, false, null);
+		List list = jdbcDao.executeQuery(sql);
 		jdbcDao.closeSession();
 
 		Set tablePathSet = new HashSet();
@@ -887,7 +866,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		
 		
 		jdbcDao.openSession(null);
-		List list = jdbcDao.executeQuery(sql, null, false, null);
+		List list = jdbcDao.executeQuery(sql);
 		jdbcDao.closeSession();
 		String atrributeType = "";
 		Iterator iterator = list.iterator();
@@ -985,7 +964,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
 		
 		jdbcDao.openSession(null);
-		List list = jdbcDao.executeQuery(sql, null, false, null);
+		List list = jdbcDao.executeQuery(sql);
 		jdbcDao.closeSession();
 		String tableName = "";
 		String tableDisplayName = "";
@@ -1179,7 +1158,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		List nameValuePairs = null;
 		try
 		{
-			List list = jdbcDAO.executeQuery(sql, null, false, null);
+			List list = jdbcDAO.executeQuery(sql);
 			nameValuePairs = new ArrayList();
 			if (!list.isEmpty())
 			{
@@ -1222,7 +1201,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	}
 
 	
-	private Object getColumnValue(SQLFormatter sqlFormatterFirst,String columnName)
+	/*private Object getColumnValue(QueryGenerator sqlFormatterFirst,String columnName)
 	{
 		Collection<ColumnValueBean> colValBeans = sqlFormatterFirst.getColValBeans();
 		Iterator<ColumnValueBean> colValBeanItr = colValBeans.iterator();
@@ -1238,7 +1217,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			}
 		}
 		return colVal;
-	}
+	}*/
 	
 	/**
 	 * Inserts Query.
@@ -1266,13 +1245,25 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 
 			String userId = sessionData.getUserId().toString();
 			String comments = "QueryLog";
-
-			SQLFormatter sqlFormatterFirst = jdbcDAO.getSQLFormatter("catissue_audit_event");
 			
-			sqlFormatterFirst.addColValBean(new ColumnValueBean("IP_ADDRESS",ipAddr,Types.STRING)).
+			//TODO :Need to refacter.
+			
+			if(daofactory.getDataBaseType().equals("MYSQL"))
+			{
+				executeAuditSqlMySQL(sqlQuery1, sessionData,
+						 comments,jdbcDAO);
+			}
+			else
+			{
+				executeAuditSqlForOracle(sqlQuery, sessionData, comments,jdbcDAO);
+			}
+
+			/*QueryGenerator sqlFormatterFirst = jdbcDAO.getSQLFormatter();
+			
+			sqlFormatterFirst.addColValBean(new ColumnValueBean("IP_ADDRESS",ipAddr,DBTypes.STRING)).
 			addColValBean(new ColumnValueBean("EVENT_TIMESTAMP",timeStamp,Types.DATE)).
 			addColValBean(new ColumnValueBean("USER_ID",userId,Types.FLOAT)).
-			addColValBean(new ColumnValueBean("COMMENTS",comments,Types.STRING));
+			addColValBean(new ColumnValueBean("COMMENTS",comments,DBTypes.STRING));
 			
 			jdbcDAO.insert(sqlFormatterFirst, "CATISSUE_AUDIT_EVENT_PARAM_SEQ", "IDENTIFIER", Types.FLOAT);
 			
@@ -1288,7 +1279,9 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			String updateClobQuery = "select QUERY_DETAILS from catissue_audit_event_query_log where IDENTIFIER="
 				+ auditEventLogId + " for update";
 			
-			jdbcDAO.updateClob(updateClobQuery, sqlQuery1);
+			jdbcDAO.updateClob(updateClobQuery, sqlQuery1);*/
+			
+			jdbcDAO.commit();
 		}
 		catch (DAOException e)
 		{
@@ -1299,6 +1292,154 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			jdbcDAO.closeSession();
 		}
 	}
+	
+	public void executeAuditSqlMySQL(String sqlQuery1, SessionDataBean sessionData,
+			String comments,JDBCDAO jdbcDAO) throws DAOException
+	{
+		long no = 1;
+		SimpleDateFormat fSDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeStamp = fSDateFormat.format(new Date());
+		String ipAddr = sessionData.getIpAddress();
+
+		String userId = sessionData.getUserId().toString();
+		String sqlForAudiEvent = "insert into catissue_audit_event(IP_ADDRESS,EVENT_TIMESTAMP,USER_ID ,COMMENTS) values ('"
+			+ ipAddr + "','" + timeStamp + "','" + userId + "','" + comments + "')";
+		jdbcDAO.executeUpdate(sqlForAudiEvent);
+
+		String sql = "select max(identifier) from catissue_audit_event where USER_ID='"
+			+ userId + "'";
+
+		List list;
+			list = jdbcDAO.executeQuery(sql);
+			if (!list.isEmpty())
+			{
+
+				List columnList = (List) list.get(0);
+				if (!columnList.isEmpty())
+				{
+					String str = (String) columnList.get(0);
+					if (!str.equals(""))
+					{
+						no = Long.parseLong(str);
+
+					}
+				}
+			}
+			String sqlForQueryLog = "insert into catissue_audit_event_query_log(QUERY_DETAILS,AUDIT_EVENT_ID) values ('"
+				+ sqlQuery1 + "','" + no + "')";
+			Logger.out.debug("sqlForQueryLog:" + sqlForQueryLog);
+			jdbcDAO.executeUpdate(sqlForQueryLog);
+	}
+
+	
+	/**
+	 * This method inserts sql statemnent in audit tables.
+	 * @param sqlQuery sql to be audited
+	 * @param sessionData
+	 * @param comments comments to be inserted in audit tables
+	 * @throws DAOException Exception to be thrown
+	 */
+	public void executeAuditSqlForOracle(String sqlQuery, SessionDataBean sessionData, String comments,JDBCDAO jdbcDAO)
+			throws DAOException
+			{
+		long no = 1;
+		String sql = "select CATISSUE_AUDIT_EVENT_PARAM_SEQ.nextVal from dual";
+		SimpleDateFormat fSDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeStamp = fSDateFormat.format(new Date());
+		String ipAddr = sessionData.getIpAddress();
+
+		String userId = sessionData.getUserId().toString();
+		try
+		{
+			List list = jdbcDAO.executeQuery(sql);
+
+			if (!list.isEmpty())
+			{
+
+				List columnList = (List) list.get(0);
+				if (!columnList.isEmpty())
+				{
+					String str = (String) columnList.get(0);
+					if (!str.equals(""))
+					{
+						no = Long.parseLong(str);
+
+					}
+				}
+			}
+			String sqlForAudiEvent = "insert into catissue_audit_event(IDENTIFIER,IP_ADDRESS,EVENT_TIMESTAMP,USER_ID ,COMMENTS) values ('"
+					+ no
+					+ "','"
+					+ ipAddr
+					+ "',to_date('"
+					+ timeStamp
+					+ "','yyyy-mm-dd HH24:MI:SS'),'" + userId + "','" + comments + "')";
+			Logger.out.info("sqlForAuditLog:" + sqlForAudiEvent);
+			jdbcDAO.executeUpdate(sqlForAudiEvent);
+
+			long queryNo = 1;
+			sql = "select CATISSUE_AUDIT_EVENT_QUERY_SEQ.nextVal from dual";
+
+			list = jdbcDAO.executeQuery(sql);
+
+			if (!list.isEmpty())
+			{
+
+				List columnList = (List) list.get(0);
+				if (!columnList.isEmpty())
+				{
+					String str = (String) columnList.get(0);
+					if (!str.equals(""))
+					{
+						queryNo = Long.parseLong(str);
+
+					}
+				}
+			}
+			String sqlForQueryLog = "insert into catissue_audit_event_query_log(IDENTIFIER,QUERY_DETAILS,AUDIT_EVENT_ID) "
+					+ "values (" + queryNo + ",EMPTY_CLOB(),'" + no + "')";
+			jdbcDAO.executeUpdate(sqlForQueryLog);
+			String sql1 = "select QUERY_DETAILS from catissue_audit_event_query_log where IDENTIFIER="
+					+ queryNo + " for update";
+
+			list = jdbcDAO.executeQuery(sql1);
+
+			CLOB clob = null;
+
+			if (!list.isEmpty())
+			{
+
+				List columnList = (List) list.get(0);
+				if (!columnList.isEmpty())
+				{
+					clob = (CLOB) columnList.get(0);
+				}
+			}
+			//			get output stream from the CLOB object
+			OutputStream os = clob.getAsciiOutputStream();
+			OutputStreamWriter osw = new OutputStreamWriter(os);
+
+			//		use that output stream to write character data to the Oracle data store
+			osw.write(sqlQuery.toCharArray());
+			//write data and commit
+			osw.flush();
+			osw.close();
+			os.close();
+			Logger.out.info("sqlForQueryLog:" + sqlForQueryLog);
+		}
+		catch (IOException e)
+		{
+			throw new DAOException(ErrorKey.getErrorKey("errors.item"), e,
+			"Failed while writing to output stream.");
+		}
+		catch (SQLException e)
+		{
+			throw new DAOException(ErrorKey.getErrorKey("errors.item"), e,
+			"Failed while getting output stream from the CLOB object");
+		}
+
+	}
+
 
 	/**
 	 * Method to execute the given SQL to get the query result.
@@ -1310,7 +1451,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	 */
 	public PagenatedResultData execute(SessionDataBean sessionDataBean,
 			QuerySessionData querySessionData, int startIndex) throws DAOException
-	{
+	{/*
 		String appName=CommonServiceLocator.getInstance().getAppName();
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO dao = daofactory.getJDBCDAO();
@@ -1348,6 +1489,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		{
 			dao.closeSession();
 		}
+	*/
+		return null;	
 	}
 
 	/**
@@ -1366,7 +1509,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
 		
 		jdbcDao.openSession(null);
-		List list = jdbcDao.executeQuery(sql, null, false, null);
+		List list = jdbcDao.executeQuery(sql);
 		jdbcDao.closeSession();
 		return list;
 	}
@@ -1382,7 +1525,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	private Long getQueryNumber(JDBCDAO jdbcDAO, String sql) throws ClassNotFoundException,
 			DAOException
 	{
-		List list = jdbcDAO.executeQuery(sql, null, false, null);
+		List list = jdbcDAO.executeQuery(sql);
 		long queryNo = 1;
 		if (!list.isEmpty())
 		{
@@ -1414,7 +1557,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		String prevValueDisplayName = "0";
 		try
 		{
-			List list = jdbcDAO.executeQuery(sql, null, false, null);
+			List list = jdbcDAO.executeQuery(sql);
 
 			if (!list.isEmpty())
 			{
@@ -1487,7 +1630,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 
 		String sql = "select CATISSUE_AUDIT_EVENT_PARAM_SEQ.nextVal from dual";
 
-		List list = jdbcDAO.executeQuery(sql, null, false, null);
+		List list = jdbcDAO.executeQuery(sql);
 
 		if (!list.isEmpty())
 		{
@@ -1522,7 +1665,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		jdbcDAO.executeUpdate(sqlForQueryLog);
 		String sql1 = "select QUERY_DETAILS from catissue_audit_event_query_log where IDENTIFIER="
 				+ queryNo + " for update";
-		list = jdbcDAO.executeQuery(sql1, null, false, null);
+		list = jdbcDAO.executeQuery(sql1);
 
 		CLOB clob = null;
 
