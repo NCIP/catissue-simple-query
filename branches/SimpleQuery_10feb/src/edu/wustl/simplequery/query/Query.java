@@ -1104,7 +1104,7 @@ public abstract class Query
 		DataElement dataElement;
 		String dataElementTableName;
 		String dataElementFieldName;
-		Vector identifiedData;
+		List identifiedData;
 		if (relatedTables != null)
 		{
 			for (int i = 0; i < resultView.size(); i++)
@@ -1116,7 +1116,7 @@ public abstract class Query
 				if (dataElementTableName.equals(tableAlias)
 						|| relatedTables.contains(dataElementTableName))
 				{
-					identifiedData = (Vector) Client.identifiedDataMap.get(dataElementTableName);
+					identifiedData = (List) Client.identifiedDataMap.get(dataElementTableName);
 					Logger.out.debug("Table:" + dataElementTableName + " Identified Data:"
 							+ identifiedData);
 					if (identifiedData != null)
