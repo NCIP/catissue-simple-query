@@ -1236,6 +1236,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		String appName=CommonServiceLocator.getInstance().getAppName();
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		 JDBCDAO jdbcDAO = daofactory.getJDBCDAO();
+		 jdbcDAO.openSession(null);
 		try
 		{
 			String sqlQuery1 = sqlQuery.replaceAll("'", "''");
