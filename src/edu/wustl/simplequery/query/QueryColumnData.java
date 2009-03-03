@@ -68,7 +68,7 @@ public class QueryColumnData extends AbstractDomainObject implements Serializabl
 
 	/**
 	 * get the object for table data.
-	 * @hibernate.many-to-one column="TABLE_ID" class="edu.wustl.common.domain.QueryTableData"
+	 * @hibernate.many-to-one column="TABLE_ID" class="edu.wustl.simplequery.query.QueryTableData"
 	 * constrained="true"
 	 * @return Returns the tableData.
 	 */
