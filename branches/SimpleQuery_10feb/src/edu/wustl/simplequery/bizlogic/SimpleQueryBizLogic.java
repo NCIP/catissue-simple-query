@@ -608,9 +608,6 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 	public QueryResultObjectData createQueryResultObjectData(String fromAliasNameValue,
 			Set fromTables) throws DAOException
 	{
-		QueryResultObjectData queryResultObjectData;
-		queryResultObjectData = new QueryResultObjectData();
-		queryResultObjectData.setAliasName(fromAliasNameValue);
 		//Aarti: getting related tables that should be dependent 
 		//on main object for authorization
 		List relatedTables = new ArrayList();
@@ -631,6 +628,9 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 		List<String> mainQueryObjects = bizLogic.getMainObjectsOfQuery();
 		
 
+		QueryResultObjectData queryResultObjectData = new QueryResultObjectData();
+		queryResultObjectData.setAliasName(fromAliasNameValue);
+		queryResultObjectData.setRelatedQueryResultObjects(new ArrayList());
 		String queryObject;
 		//Aarti: remove independent query objects from related objects
 		//vector and add them to tableSet so that their authorization
