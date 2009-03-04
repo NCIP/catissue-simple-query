@@ -309,10 +309,10 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		Client.objectTableNames = queryBizLogic.getQueryObjectNameTableNameMap();
 		Client.relationConditionsForRelatedTables = queryBizLogic.getRelationData();
 		Client.privilegeTypeMap = queryBizLogic.getPivilegeTypeMap();
-		List identifiedData = new ArrayList();
+		//List identifiedData = new ArrayList();
 
 		//For Participant
-		//identifiedData = new Vector();
+		List identifiedData = new Vector();
 		identifiedData.add("FIRST_NAME");
 		identifiedData.add("LAST_NAME");
 		identifiedData.add("MIDDLE_NAME");
