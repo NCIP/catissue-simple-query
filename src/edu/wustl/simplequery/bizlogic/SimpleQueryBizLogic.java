@@ -230,7 +230,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 
 			for (int i = 0; i < objectFields.length; i++)
 			{
-				if (objectFields[i].getName().equals(edu.wustl.common.util.global.Status.ACTIVITY_STATUS))
+				if (objectFields[i].getName().equals(edu.wustl.common.util.global.Status.ACTIVITY_STATUS.toString()))
 				{
 					activityStatusCondition = new SimpleConditionsNode();
 					activityStatusCondition.getCondition().getDataElement().setTableName(aliasName);
