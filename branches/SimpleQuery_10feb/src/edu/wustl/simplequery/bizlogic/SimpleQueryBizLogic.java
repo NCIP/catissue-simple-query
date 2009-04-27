@@ -272,6 +272,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 			{
 				dataElement.setTableName(st.nextToken());
 				String field = st.nextToken();
+				st.nextToken();
 				String tableInPath = null;
 				if (st.hasMoreTokens())
 				{
