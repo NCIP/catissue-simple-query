@@ -91,7 +91,11 @@ public class Condition
 		}
 		else
 		{
-			newValue = value;
+			if(value == null)
+				newValue = "";
+			else
+				newValue = value;
+				
 		}
 
 		if (newOperator.equals(Operator.STARTS_WITH))
