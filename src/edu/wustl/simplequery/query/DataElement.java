@@ -119,15 +119,29 @@ public class DataElement implements Serializable
 			if ((fieldType != null)
 					&& (Constants.FIELD_TYPE_TIMESTAMP_TIME.equalsIgnoreCase(fieldType)))
 			{
-				fieldName = dao.getTimeFormatFunction() + "(" + fieldName + ",'"
-				+ dao.getTimePattern() + "') ";
+				if("MSSQLSERVER".equals(DAOConfigFactory.getInstance().getDAOFactory(appName).getDataBaseType()))
+		    	{
+		    		 fieldName="CONVERT(VARCHAR(12), "+fieldName+", 108)";
+		    	}
+		        else
+		    	{
+		    		fieldName = dao.getTimeFormatFunction() + "(" + fieldName + ",'"
+		    		+ dao.getTimePattern() + "') ";
+		    	}
 			}
 			else if ((fieldType != null)
 					&& (Constants.FIELD_TYPE_TIMESTAMP_DATE.equalsIgnoreCase(fieldType)))
 			{
-				fieldName = dao.getStrTodateFunction() + "(" + dao.getDateFormatFunction()+ "("
-				+ fieldName + ",'" + dao.getDatePattern() + "')" + ",'"
-				+ dao.getDatePattern() + "')";
+				if("MSSQLSERVER".equals(DAOConfigFactory.getInstance().getDAOFactory(appName).getDataBaseType()))
+		    	   {
+		    		   fieldName="CONVERT(DATETIME, CONVERT(VARCHAR(12), "+fieldName+", 110), 110)";
+		    	   }
+		    	   else
+		    	   {
+		    		   fieldName = dao.getStrTodateFunction() + "(" + dao.getDateFormatFunction()+ "("
+		    		   + fieldName + ",'" + dao.getDatePattern() + "')" + ",'"
+		    		   + dao.getDatePattern() + "')";
+		    	   }
 			}
 		}
 		catch (DAOException e)
