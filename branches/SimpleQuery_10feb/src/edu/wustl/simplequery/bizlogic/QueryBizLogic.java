@@ -1251,14 +1251,15 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			
 			//TODO :Need to refacter.
 			
-			if(daofactory.getDataBaseType().equalsIgnoreCase("MYSQL"))
+			if("ORACLE".equalsIgnoreCase(daofactory.getDataBaseType()))
 			{
-				executeAuditSqlMySQL(sqlQuery1, sessionData,
-						 comments,jdbcDAO);
+				executeAuditSqlForOracle(sqlQuery, sessionData, comments,jdbcDAO);
 			}
 			else
 			{
-				executeAuditSqlForOracle(sqlQuery, sessionData, comments,jdbcDAO);
+				//MYSQL,MSSQLSERVER
+				executeAuditSqlMySQL(sqlQuery1, sessionData,
+						 comments,jdbcDAO);
 			}
 
 			/*QueryGenerator sqlFormatterFirst = jdbcDAO.getSQLFormatter();
