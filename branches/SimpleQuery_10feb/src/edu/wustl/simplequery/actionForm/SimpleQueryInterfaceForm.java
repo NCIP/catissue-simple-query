@@ -92,11 +92,8 @@ public class SimpleQueryInterfaceForm extends ActionForm
 	 */
 	private String[] selectedColumnNames;
 
-	/**
-	 * Specifies columnNames neccessary for Configuration of Simple Search.
-	 */
-	private List<String> columnNameList;
-
+	private String []columnNames;
+	
 	/**
 	 * @return Returns the mutable.
 	 */
@@ -446,22 +443,6 @@ public class SimpleQueryInterfaceForm extends ActionForm
 		this.selectedColumnNames = selectedColNames;
 	}
 
-	/**
-	 * @return Returns the columnNames.
-	 */
-	public String[] getColumnNames()
-	{
-		String[] columnNames = new String[columnNameList.size()];
-		return columnNameList.toArray(columnNames);
-	}
-
-	/**
-	 * @param columnNames The columnNames to set.
-	 */
-	public void setColumnNames(String[] columnNames)
-	{
-		columnNameList = Arrays.asList(columnNames);
-	}
 
 	/**
 	 * @return Returns the tableName.
@@ -568,4 +549,16 @@ public class SimpleQueryInterfaceForm extends ActionForm
 		return showCalendarValues.get(key);
 	}
 
+	/**
+	 * @return Returns the columnNames.
+	 */
+	public String[] getColumnNames() {
+		return columnNames;
+	}
+	/**
+	 * @param columnNames The columnNames to set.
+	 */
+	public void setColumnNames(String[] columnNames) {
+		this.columnNames = columnNames;
+	}
 }
