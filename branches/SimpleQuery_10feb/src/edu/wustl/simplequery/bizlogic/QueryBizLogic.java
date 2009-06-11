@@ -334,6 +334,14 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		identifiedData = new Vector();
 		identifiedData.add("SURGICAL_PATHOLOGICAL_NUMBER");
 		Client.identifiedDataMap.put(Query.CLINICAL_REPORT, identifiedData);
+		
+
+		//For specimen
+		//bug 12176 - to hashed out the value of CREATED_ON_DATE.
+		identifiedData = new Vector();
+		identifiedData.add("CREATED_ON_DATE");
+		Client.identifiedDataMap.put(Query.SPECIMEN, identifiedData);
+
 
 	}
 
