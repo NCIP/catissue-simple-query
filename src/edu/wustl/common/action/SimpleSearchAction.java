@@ -376,30 +376,25 @@ public class SimpleSearchAction extends BaseAction
 
 		// List of results the query will return on execution.
 		List list = pagenatedResultData.getResult();
+		String alias = (String) session.getAttribute(Constants.SIMPLE_QUERY_ALIAS_NAME);
+		String replaceAlias = simpleQueryInterfaceForm.getAliasName();
+		String newPageOf = simpleQueryInterfaceForm.getPageOf();
+		String path;
 		// If the result contains no data, show error message.
 		if (list.isEmpty())
 		{
 			ActionErrors errors = new ActionErrors();
 			errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("simpleQuery.noRecordsFound"));
 			saveErrors(request, errors);
-
-			String alias = (String) session.getAttribute(Constants.SIMPLE_QUERY_ALIAS_NAME);
-			if (alias == null)
-			{
-				alias = simpleQueryInterfaceForm.getAliasName();
-			}
 			simpleQueryInterfaceForm.setValues(map);
+			
 			//remove the original session attributes for the query if the list is empty
 			session.setAttribute(Constants.ORIGINAL_SIMPLE_QUERY_OBJECT, null);
 			session.setAttribute(Constants.ORIGINAL_SIMPLE_QUERY_COUNTER, null);
-
-			String path = Constants.SIMPLE_QUERY_INTERFACE_ACTION + "?" + Constants.PAGEOF + "="
-					+ simpleQueryInterfaceForm.getPageOf() + "&";
-			if (alias != null)
-			{
-				path = path + Constants.TABLE_ALIAS_NAME + "=" + alias;
-			}
-
+			
+			replaceAlias = simpleQueryInterfaceForm.getAliasName();
+			newPageOf = simpleQueryInterfaceForm.getPageOf();
+			path = getDirectedPath(replaceAlias,alias,newPageOf);
 			return getActionForward(Constants.SIMPLE_QUERY_NO_RESULTS, path);
 		}
 		else
@@ -412,7 +407,7 @@ public class SimpleSearchAction extends BaseAction
 			{
 				List rowList = (List) list.get(0);
 
-				String path = Constants.SEARCH_OBJECT_ACTION + "?" + Constants.PAGEOF + "="
+				path = Constants.SEARCH_OBJECT_ACTION + "?" + Constants.PAGEOF + "="
 						+ simpleQueryInterfaceForm.getPageOf() + "&" + Constants.OPERATION + "="
 						+ Constants.SEARCH + "&"
 						+ edu.wustl.common.util.global.Constants.SYSTEM_IDENTIFIER + "="
@@ -424,6 +419,15 @@ public class SimpleSearchAction extends BaseAction
 							+ edu.wustl.common.util.global.Constants.SYSTEM_IDENTIFIER + "="
 							+ rowList.get(identifierIndex);
 				}
+				
+				Iterator iter = rowList.iterator();
+				int flag = checkHashedOut(iter);
+				 
+				if(flag==0)
+				{
+					path = getDirectedPath(replaceAlias,alias,newPageOf);
+				}
+				
 				return getActionForward(Constants.SIMPLE_QUERY_SINGLE_RESULT, path);
 			}
 			else
@@ -460,6 +464,31 @@ public class SimpleSearchAction extends BaseAction
 		}
 		session.setAttribute(Constants.IS_SIMPLE_SEARCH, Boolean.TRUE.toString());
 		return mapping.findForward(target);
+	}
+
+	private int checkHashedOut(Iterator iter) {
+		int flag=1;
+		while(iter.hasNext())
+		{
+			if(edu.wustl.query.util.global.Constants.HASH_OUT.equals(iter.next()))
+				flag = 0;
+		}
+		return flag;
+	}
+
+	private String getDirectedPath(String alias,String aliasName,String newPageOf) {
+		
+		if (alias == null)
+		{
+			alias = aliasName;
+		}		
+		String path = Constants.SIMPLE_QUERY_INTERFACE_ACTION + "?" + Constants.PAGEOF + "="
+				+ newPageOf + "&";
+		if (alias != null)
+		{
+			path = path + Constants.TABLE_ALIAS_NAME + "=" + alias;
+		}
+		return path;
 	}
 
 	/**

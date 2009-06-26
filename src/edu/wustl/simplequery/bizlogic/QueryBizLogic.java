@@ -342,6 +342,12 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		identifiedData.add("CREATED_ON_DATE");
 		Client.identifiedDataMap.put(Query.SPECIMEN, identifiedData);
 
+		//For DISTRIBUTION_PROTOCOL
+		//bug 12175 - to hashed out the value of START_DATE and END_DATE.
+		identifiedData = new Vector();
+		identifiedData.add("START_DATE");
+		identifiedData.add("END_DATE");
+		Client.identifiedDataMap.put(Query.SPECIMEN_PROTOCOL, identifiedData);
 
 	}
 
