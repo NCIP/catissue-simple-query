@@ -30,6 +30,7 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.util.HibernateMetaData;
+import edu.wustl.dao.util.HibernateMetaDataFactory;
 import edu.wustl.simplequery.global.Constants;
 import edu.wustl.simplequery.query.DataElement;
 import edu.wustl.simplequery.query.Query;
@@ -872,7 +873,10 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 	private String getClassName(String aliasName) throws DAOException, ClassNotFoundException
 	{
 		String tableName = getTableName(aliasName);
-		String className = HibernateMetaData.getClassName(tableName);
+		String applicationName = CommonServiceLocator.getInstance().getAppName() ;
+		HibernateMetaData hibernateMetaData = HibernateMetaDataFactory.
+								getHibernateMetaData(applicationName) ;
+		String className = hibernateMetaData.getClassName(tableName);
 		return className;
 	}
 
@@ -939,7 +943,10 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 	 */
 	public String getAliasName(Class theClass) throws DAOException, ClassNotFoundException
 	{
-		String tableName = HibernateMetaData.getTableName(theClass);
+		String applicationName = CommonServiceLocator.getInstance().getAppName() ;
+		HibernateMetaData hibernateMetaData = HibernateMetaDataFactory.
+												getHibernateMetaData(applicationName) ;
+		String tableName = hibernateMetaData.getTableName(theClass);
 		String aliasName = getAliasName(tableName);
 		return aliasName;
 	}
