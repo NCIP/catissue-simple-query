@@ -13,14 +13,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,8 +46,6 @@ import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
-import edu.wustl.dao.query.generator.DBTypes;
-import edu.wustl.dao.query.generator.QueryGenerator;
 import edu.wustl.query.executor.AbstractQueryExecutor;
 import edu.wustl.security.exception.SMException;
 import edu.wustl.simplequery.global.Constants;
@@ -130,7 +128,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			String appName=CommonServiceLocator.getInstance().getAppName();
 			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			jdbcDAO = daofactory.getJDBCDAO();
-			
+
 			jdbcDAO.openSession(null);
 			list = jdbcDAO.executeQuery(ALIAS_NAME_TABLE_NAME_MAP_QUERY);
 
@@ -193,7 +191,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			logger.debug("Could not obtain table privilege map. Exception:" + daoExp.getMessage(),
 					daoExp);
 		}
-		
+
 		finally
 		{
 			try
@@ -334,7 +332,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		identifiedData = new Vector();
 		identifiedData.add("SURGICAL_PATHOLOGICAL_NUMBER");
 		Client.identifiedDataMap.put(Query.CLINICAL_REPORT, identifiedData);
-		
+
 
 		//For specimen
 		//bug 12176 - to hashed out the value of CREATED_ON_DATE.
@@ -363,17 +361,17 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		String appName=CommonServiceLocator.getInstance().getAppName();
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDAO  = daofactory.getJDBCDAO();
-		
+
 		jdbcDAO.openSession(null);
 		String[] selectColumnNames = {Constants.TABLE_ALIAS_NAME_COLUMN};
 	//	String[] whereColumnNames = {columnName};
 		//String[] whereColumnConditions = {"="};
 		//Object[] whereColumnValues = {columnValue};
-		
+
 		QueryWhereClause queryWhereClause = new QueryWhereClause(Constants.TABLE_DATA_TABLE_NAME);
 		queryWhereClause.addCondition(new EqualClause(columnName,columnValue));
-			
-		
+
+
 		List<Object> list = jdbcDAO.retrieve(Constants.TABLE_DATA_TABLE_NAME, selectColumnNames,queryWhereClause);
 		jdbcDAO.closeSession();
 
@@ -424,8 +422,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		String appName=CommonServiceLocator.getInstance().getAppName();
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
-		
-		
+
+
 		jdbcDao.openSession(null);
 		List list = jdbcDao.executeQuery(sql);
 		jdbcDao.closeSession();
@@ -487,7 +485,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		String appName=CommonServiceLocator.getInstance().getAppName();
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
-		
+
 		jdbcDao.openSession(null);
 		List list = jdbcDao.executeQuery(sql);
 		jdbcDao.closeSession();
@@ -499,7 +497,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		objectList.add(nameValueBean);
 
 		//Adding the NameValueBean of previous selected object.
-		
+
 		jdbcDao.openSession(null);
 
 		sql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where ALIAS_NAME='" + prevValue
@@ -632,7 +630,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			String sql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where TABLE_NAME='"
 				+ tableName + "'";
 			List list = jdbcDAO.executeQuery(sql);
-		
+
 			if (!list.isEmpty())
 			{
 				List rowList = (List) list.get(0);
@@ -643,7 +641,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		{
 			jdbcDAO.closeSession();
 
-		}	
+		}
 		return prevValueDisplayName;
 	}
 
@@ -682,11 +680,11 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDAO = daofactory.getJDBCDAO();
 		jdbcDAO.openSession(null);
-		
+
 		QueryWhereClause queryWhereClause = new QueryWhereClause(Constants.TABLE_DATA_TABLE_NAME);
 		queryWhereClause.getWhereCondition(whereColumnNames, whereColumnConditions,
 				whereColumnValues,Constants.AND_JOIN_CONDITION);
-		
+
 		List tableList = jdbcDAO.retrieve(Constants.TABLE_DATA_TABLE_NAME, selectColumnNames,
 				queryWhereClause);
 		jdbcDAO.closeSession();
@@ -746,7 +744,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		{
 			logger.debug("Could not obtain main objects. Exception:" + daoExp.getMessage(), daoExp);
 		}
-		
+
 		finally
 		{
 			try
@@ -797,7 +795,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			logger.debug("Could not obtain related tables. Exception:" + daoExp.getMessage(),
 					daoExp);
 		}
-		
+
 		finally
 		{
 			try
@@ -879,8 +877,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		String appName=CommonServiceLocator.getInstance().getAppName();
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
-		
-		
+
+
 		jdbcDao.openSession(null);
 		List list = jdbcDao.executeQuery(sql);
 		jdbcDao.closeSession();
@@ -912,15 +910,15 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		String[] whereColumnNames = {"ALIAS_NAME"};
 		String[] whereColumnConditions = {"="};
 		String[] whereColumnValues = {"'" + aliasName + "'"};
-		
-		
+
+
 		QueryWhereClause queryWhereClause = new QueryWhereClause("CATISSUE_QUERY_TABLE_DATA");
 		queryWhereClause.getWhereCondition(whereColumnNames, whereColumnConditions,
 				whereColumnValues,null);
-		
+
 		List list = jdbcDAO.retrieve("CATISSUE_QUERY_TABLE_DATA", selectColumnNames,
 				queryWhereClause);
-		
+
 		jdbcDAO.closeSession();
 		logger.debug("List of Ids size: " + list.size() + " list " + list);
 		String tableIdString = "";
@@ -978,7 +976,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		String appName=CommonServiceLocator.getInstance().getAppName();
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
-		
+
 		jdbcDao.openSession(null);
 		List list = jdbcDao.executeQuery(sql);
 		jdbcDao.closeSession();
@@ -1097,7 +1095,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			String appName=CommonServiceLocator.getInstance().getAppName();
 			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			jdbcDAO = daofactory.getJDBCDAO();
-			
+
 			jdbcDAO.openSession(null);
 
 			summaryDataMap = new HashMap<String, Object>();
@@ -1216,14 +1214,14 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		return prevValueDisplayName;
 	}
 
-	
+
 	/*private Object getColumnValue(QueryGenerator sqlFormatterFirst,String columnName)
 	{
 		Collection<ColumnValueBean> colValBeans = sqlFormatterFirst.getColValBeans();
 		Iterator<ColumnValueBean> colValBeanItr = colValBeans.iterator();
 		Object colVal = null;
-		
-		
+
+
 		while(colValBeanItr.hasNext())
 		{
 			ColumnValueBean columnValueBean = (ColumnValueBean)colValBeanItr.next();
@@ -1234,7 +1232,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		}
 		return colVal;
 	}*/
-	
+
 	/**
 	 * Inserts Query.
 	 * @param sqlQuery sql Query.
@@ -1246,7 +1244,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			ClassNotFoundException
 	{
 
-		
+
 		String appName=CommonServiceLocator.getInstance().getAppName();
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		 JDBCDAO jdbcDAO = daofactory.getJDBCDAO();
@@ -1262,9 +1260,9 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 
 			String userId = sessionData.getUserId().toString();
 			String comments = "QueryLog";
-			
+
 			//TODO :Need to refacter.
-			
+
 			if("ORACLE".equalsIgnoreCase(daofactory.getDataBaseType()))
 			{
 				executeAuditSqlForOracle(sqlQuery, sessionData, comments,jdbcDAO);
@@ -1277,28 +1275,28 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			}
 
 			/*QueryGenerator sqlFormatterFirst = jdbcDAO.getSQLFormatter();
-			
+
 			sqlFormatterFirst.addColValBean(new ColumnValueBean("IP_ADDRESS",ipAddr,DBTypes.STRING)).
 			addColValBean(new ColumnValueBean("EVENT_TIMESTAMP",timeStamp,Types.DATE)).
 			addColValBean(new ColumnValueBean("USER_ID",userId,Types.FLOAT)).
 			addColValBean(new ColumnValueBean("COMMENTS",comments,DBTypes.STRING));
-			
+
 			jdbcDAO.insert(sqlFormatterFirst, "CATISSUE_AUDIT_EVENT_PARAM_SEQ", "IDENTIFIER", Types.FLOAT);
-			
+
 			Long auditEventId = (Long)getColumnValue(sqlFormatterFirst,"IDENTIFIER");
-		
+
 			SQLFormatter sqlFormatterSec = jdbcDAO.getSQLFormatter("catissue_audit_event_query_log");
 			sqlFormatterSec.addColValBean(new ColumnValueBean("QUERY_DETAILS","EMPTY_CLOB()",Types.CLOB)).
 			addColValBean(new ColumnValueBean("AUDIT_EVENT_ID",auditEventId,Types.FLOAT));
-		
+
 			jdbcDAO.insert(sqlFormatterSec, "CATISSUE_AUDIT_EVENT_QUERY_SEQ", "IDENTIFIER", Types.FLOAT);
 			Long auditEventLogId = (Long)getColumnValue(sqlFormatterSec,"IDENTIFIER");
-			
+
 			String updateClobQuery = "select QUERY_DETAILS from catissue_audit_event_query_log where IDENTIFIER="
 				+ auditEventLogId + " for update";
-			
+
 			jdbcDAO.updateClob(updateClobQuery, sqlQuery1);*/
-			
+
 			jdbcDAO.commit();
 		}
 		catch (DAOException e)
@@ -1310,19 +1308,27 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			jdbcDAO.closeSession();
 		}
 	}
-	
+
 	public void executeAuditSqlMySQL(String sqlQuery1, SessionDataBean sessionData,
 			String comments,JDBCDAO jdbcDAO) throws DAOException
 	{
 		long no = 1;
 		SimpleDateFormat fSDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String timeStamp = fSDateFormat.format(new Date());
+//		String timeStamp = fSDateFormat.format(new Date());
+		Timestamp timeStamp = new Timestamp((new Date()).getTime());
 		String ipAddr = sessionData.getIpAddress();
 
 		String userId = sessionData.getUserId().toString();
-		String sqlForAudiEvent = "insert into catissue_audit_event(IP_ADDRESS,EVENT_TIMESTAMP,USER_ID ,COMMENTS) values ('"
-			+ ipAddr + "','" + timeStamp + "','" + userId + "','" + comments + "')";
-		jdbcDAO.executeUpdate(sqlForAudiEvent);
+		String sqlForAudiEvent = "insert into catissue_audit_event(IP_ADDRESS,EVENT_TIMESTAMP,USER_ID ,COMMENTS) values (?,?,?,?)";
+		LinkedList<LinkedList<ColumnValueBean>> columnValueBeans = new LinkedList<LinkedList<ColumnValueBean>>();
+		LinkedList columnValueBeanList = new LinkedList();
+		columnValueBeanList.add(new ColumnValueBean(ipAddr));
+		columnValueBeanList.add(new ColumnValueBean(timeStamp));
+		columnValueBeanList.add(new ColumnValueBean(userId));
+		columnValueBeanList.add(new ColumnValueBean(comments));
+		columnValueBeans.add(columnValueBeanList);
+
+		jdbcDAO.executeUpdate(sqlForAudiEvent, columnValueBeans);
 
 		String sql = "select max(identifier) from catissue_audit_event where USER_ID='"
 			+ userId + "'";
@@ -1349,7 +1355,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			jdbcDAO.executeUpdate(sqlForQueryLog);
 	}
 
-	
+
 	/**
 	 * This method inserts sql statemnent in audit tables.
 	 * @param sqlQuery sql to be audited
@@ -1363,9 +1369,9 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		long no = 1;
 		String sql = "select CATISSUE_AUDIT_EVENT_PARAM_SEQ.nextVal from dual";
 		SimpleDateFormat fSDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String timeStamp = fSDateFormat.format(new Date());
+//		String timeStamp = fSDateFormat.format(new Date());
 		String ipAddr = sessionData.getIpAddress();
-
+		Timestamp timeStamp = new Timestamp((new Date()).getTime());
 		String userId = sessionData.getUserId().toString();
 		try
 		{
@@ -1385,15 +1391,18 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 					}
 				}
 			}
-			String sqlForAudiEvent = "insert into catissue_audit_event(IDENTIFIER,IP_ADDRESS,EVENT_TIMESTAMP,USER_ID ,COMMENTS) values ('"
-					+ no
-					+ "','"
-					+ ipAddr
-					+ "',to_date('"
-					+ timeStamp
-					+ "','yyyy-mm-dd HH24:MI:SS'),'" + userId + "','" + comments + "')";
+			String sqlForAudiEvent = "insert into catissue_audit_event(IDENTIFIER,IP_ADDRESS,EVENT_TIMESTAMP,USER_ID ,COMMENTS) values (?,?,?,?,?)";
 			Logger.out.info("sqlForAuditLog:" + sqlForAudiEvent);
-			jdbcDAO.executeUpdate(sqlForAudiEvent);
+			LinkedList<LinkedList<ColumnValueBean>> columnValueBeans = new LinkedList<LinkedList<ColumnValueBean>>();
+			LinkedList columnValueBeanList = new LinkedList();
+			columnValueBeanList.add(new ColumnValueBean(no));
+			columnValueBeanList.add(new ColumnValueBean(ipAddr));
+			columnValueBeanList.add(new ColumnValueBean(timeStamp));
+			columnValueBeanList.add(new ColumnValueBean(userId));
+			columnValueBeanList.add(new ColumnValueBean(comments));
+			columnValueBeans.add(columnValueBeanList);
+
+			jdbcDAO.executeUpdate(sqlForAudiEvent, columnValueBeans);
 
 			long queryNo = 1;
 			sql = "select CATISSUE_AUDIT_EVENT_QUERY_SEQ.nextVal from dual";
@@ -1415,8 +1424,15 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 				}
 			}
 			String sqlForQueryLog = "insert into catissue_audit_event_query_log(IDENTIFIER,QUERY_DETAILS,AUDIT_EVENT_ID) "
-					+ "values (" + queryNo + ",EMPTY_CLOB(),'" + no + "')";
-			jdbcDAO.executeUpdate(sqlForQueryLog);
+					+ "values (?,EMPTY_CLOB(),?)";
+			columnValueBeans = new LinkedList<LinkedList<ColumnValueBean>>();
+			columnValueBeanList = new LinkedList();
+			columnValueBeanList.add(new ColumnValueBean(queryNo));
+			columnValueBeanList.add(new ColumnValueBean(no));
+			columnValueBeans.add(columnValueBeanList);
+			jdbcDAO.executeUpdate(sqlForQueryLog, columnValueBeans);
+
+
 			String sql1 = "select QUERY_DETAILS from catissue_audit_event_query_log where IDENTIFIER="
 					+ queryNo + " for update";
 
@@ -1473,12 +1489,12 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		String appName=CommonServiceLocator.getInstance().getAppName();
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO dao = daofactory.getJDBCDAO();
-		
+
 		try
 		{
 			dao.openSession(null);
 			QueryParams queryParams = new QueryParams();
-			
+
 			queryParams.setQuery(querySessionData.getSql());
 			queryParams.setSessionDataBean(sessionDataBean);
 			queryParams.setSecureToExecute(querySessionData.isSecureExecute());
@@ -1486,10 +1502,10 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 			queryParams.setQueryResultObjectDataMap(querySessionData.getQueryResultObjectDataMap());
 			queryParams.setStartIndex(startIndex);
 			queryParams.setNoOfRecords(querySessionData.getRecordsPerPage());
-			
+
 			AbstractQueryExecutor queryExecutor = edu.wustl.query.util.global.Utility.getQueryExecutor();
 			PagenatedResultData pagenatedResultData = queryExecutor.getQueryResultList(queryParams);
-					
+
 
 			return pagenatedResultData;
 		}
@@ -1507,7 +1523,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		{
 			dao.closeSession();
 		}
-	
+
 	}
 
 	/**
@@ -1524,7 +1540,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		String appName=CommonServiceLocator.getInstance().getAppName();
 		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcDao = daofactory.getJDBCDAO();
-		
+
 		jdbcDao.openSession(null);
 		List list = jdbcDao.executeQuery(sql);
 		jdbcDao.closeSession();
@@ -1599,16 +1615,24 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		long number = 1;
 
 		SimpleDateFormat fSDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String timeStamp = fSDateFormat.format(new Date());
+//		String timeStamp = fSDateFormat.format(new Date());
+		Timestamp timeStamp = new Timestamp((new Date()).getTime());
 
 		String ipAddr = sessionData.getIpAddress();
 
 		String userId = sessionData.getUserId().toString();
 		String comments = "QueryLog";
 
-		String sqlForAudiEvent = "insert into catissue_audit_event(IP_ADDRESS,EVENT_TIMESTAMP,USER_ID ,COMMENTS) values ('"
-			+ ipAddr + "','" + timeStamp + "','" + userId + "','" + comments + "')";
-		jdbcDAO.executeUpdate(sqlForAudiEvent);
+		String sqlForAudiEvent = "insert into catissue_audit_event(IP_ADDRESS,EVENT_TIMESTAMP,USER_ID ,COMMENTS) values (?,?,?,?)";
+		LinkedList<LinkedList<ColumnValueBean>> columnValueBeans = new LinkedList<LinkedList<ColumnValueBean>>();
+		LinkedList columnValueBeanList = new LinkedList();
+		columnValueBeanList.add(new ColumnValueBean(ipAddr));
+		columnValueBeanList.add(new ColumnValueBean(timeStamp));
+		columnValueBeanList.add(new ColumnValueBean(userId));
+		columnValueBeanList.add(new ColumnValueBean(comments));
+		columnValueBeans.add(columnValueBeanList);
+
+		jdbcDAO.executeUpdate(sqlForAudiEvent, columnValueBeans);
 
 		String sql = "select max(identifier) from catissue_audit_event where USER_ID='" + userId
 		+ "'";
@@ -1638,7 +1662,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		String sqlQuery1 = sqlQuery.replaceAll("'", "''");
 		long no = 1;
 		SimpleDateFormat fSDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String timeStamp = fSDateFormat.format(new Date());
+//		String timeStamp = fSDateFormat.format(new Date());
+		Timestamp timeStamp = new Timestamp((new Date()).getTime());
 
 		String ipAddr = sessionData.getIpAddress();
 
@@ -1662,24 +1687,30 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 				}
 			}
 		}
-		String sqlForAudiEvent = "insert into catissue_audit_event(IDENTIFIER,IP_ADDRESS,EVENT_TIMESTAMP,USER_ID ,COMMENTS) values ('"
-				+ no
-				+ "','"
-				+ ipAddr
-				+ "',to_date('"
-				+ timeStamp
-				+ "','yyyy-mm-dd HH24:MI:SS'),'"
-				+ userId + "','" + comments + "')";
+		String sqlForAudiEvent = "insert into catissue_audit_event(IDENTIFIER,IP_ADDRESS,EVENT_TIMESTAMP,USER_ID ,COMMENTS) values (?,?,?,?,?)";
 		Logger.out.info("sqlForAuditLog:" + sqlForAudiEvent);
-		jdbcDAO.executeUpdate(sqlForAudiEvent);
+		LinkedList<LinkedList<ColumnValueBean>> columnValueBeans = new LinkedList<LinkedList<ColumnValueBean>>();
+		LinkedList columnValueBeanList = new LinkedList();
+		columnValueBeanList.add(new ColumnValueBean(no));
+		columnValueBeanList.add(new ColumnValueBean(ipAddr));
+		columnValueBeanList.add(new ColumnValueBean(timeStamp));
+		columnValueBeanList.add(new ColumnValueBean(userId));
+		columnValueBeanList.add(new ColumnValueBean(comments));
+		columnValueBeans.add(columnValueBeanList);
+		jdbcDAO.executeUpdate(sqlForAudiEvent, columnValueBeans);
 
 		long queryNo = 1;
 		sql = "select CATISSUE_AUDIT_EVENT_QUERY_SEQ.nextVal from dual";
 		queryNo = getQueryNumber(jdbcDAO, sql);
 
 		String sqlForQueryLog = "insert into catissue_audit_event_query_log(IDENTIFIER,QUERY_DETAILS,AUDIT_EVENT_ID) "
-				+ "values (" + queryNo + ",EMPTY_CLOB(),'" + no + "')";
-		jdbcDAO.executeUpdate(sqlForQueryLog);
+				+ "values (?,EMPTY_CLOB(),?)";
+		columnValueBeans = new LinkedList<LinkedList<ColumnValueBean>>();
+		columnValueBeanList = new LinkedList();
+		columnValueBeanList.add(new ColumnValueBean(queryNo));
+		columnValueBeanList.add(new ColumnValueBean(no));
+		columnValueBeans.add(columnValueBeanList);
+		jdbcDAO.executeUpdate(sqlForQueryLog, columnValueBeans);
 		String sql1 = "select QUERY_DETAILS from catissue_audit_event_query_log where IDENTIFIER="
 				+ queryNo + " for update";
 		list = jdbcDAO.executeQuery(sql1);
@@ -1709,8 +1740,8 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		logger.info("sqlForQueryLog:" + sqlForQueryLog);
 
 	}
-	
-	
+
+
 
 	/*public List getColumnNames(String arg0) throws DAOException, ClassNotFoundException
 	{
@@ -1721,13 +1752,13 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	/*public void delete(Object arg0) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void delete(Object arg0, int arg1) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public boolean hasPrivilegeToView(String arg0, Long arg1, SessionDataBean arg2)
@@ -1739,25 +1770,25 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	public void insert(Object arg0) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void insert(Object arg0, SessionDataBean arg1) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void insert(Object arg0, int arg1) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void insert(Object arg0, SessionDataBean arg1, int arg2) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public boolean isAuthorized(DAO arg0, Object arg1, SessionDataBean arg2) throws BizLogicException
@@ -1781,38 +1812,38 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	public void setPrivilege(String arg0, Class arg1, Long[] arg2, Long arg3, SessionDataBean arg4, String arg5, boolean arg6, boolean arg7) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void setPrivilege(int arg0, String arg1, Class arg2, Long[] arg3, Long arg4, SessionDataBean arg5, String arg6, boolean arg7, boolean arg8) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void update(Object arg0) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void update(Object arg0, int arg1) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void update(Object arg0, Object arg1, SessionDataBean arg2) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void update(Object arg0, Object arg1, int arg2, SessionDataBean arg3) throws BizLogicException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}*/
 
-	
+
 }
