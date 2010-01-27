@@ -2,12 +2,12 @@
 
 <!--Ant Script for create Build for SimpleQuery -->
 <project name="SimpleQuery" default="compile">
-	<property file="simplequery.properties"/>
+	<property file="./src/conf/simplequery.properties"/>
 	<property name="base.dir" value="." />
 	<property name="lib.dir" value="${base.dir}/lib" />
 	<property name="build.dir" value="${base.dir}/build" />
-	<property name="src.dir" value="${base.dir}/src" />
-	<property name="target.dir" value="${base.dir}/classes" />
+	<property name="src.dir" value="${base.dir}/src/java" />
+	<property name="target.dir" value="${build.dir}/classes" />
 
 	<loadfile property="dist.revision" srcFile="./.svn/entries">  
 				<filterchain>  
@@ -43,9 +43,7 @@
 			<mkdir dir="${build.dir}" />
 		</target>
 	<target name="build_jar" depends="compile">
-			<delete>
-				<fileset dir="${build.dir}" includes="**/*" />
-			</delete>
+			
 			<tstamp />
 			<jar taskname="build_jar" jarfile="${build.dir}/SimpleQuery-${simplequery.jar.version}.jar">
 				<fileset dir="${target.dir}">
@@ -67,6 +65,10 @@
 			<zip destfile="${build.dir}/SQ-${simplequery.jar.version}-src.zip">
 				<fileset dir="${src.dir}" includes="**/*" />
 			</zip>
+		</target>
+		
+			<target name="dist" depends="build_jar">
+					
 		</target>
 
 </project>
