@@ -223,7 +223,7 @@ public class Client extends AbstractClient
 		objectTableNames.put(Query.SPECIMEN_PROTOCOL, "catissue_specimen_protocol");
 		objectTableNames.put(Query.COLLECTION_COORDINATORS, "CATISSUE_COLL_COORDINATORS");
 		objectTableNames.put(Query.SPECIMEN_REQUIREMENT, "catissue_specimen_requirement");
-		objectTableNames.put(Query.COLLECTION_SPECIMEN_REQUIREMENT, "CATISSUE_COLL_SPECIMEN_REQ");
+		objectTableNames.put(Query.COLLECTION_SPECIMEN_REQUIREMENT, "CATISSUE_CP_REQ_SPECIMEN");
 		objectTableNames.put(Query.DISTRIBUTION_PROTOCOL, "catissue_distribution_protocol");
 		objectTableNames.put(Query.DISTRIBUTION_SPECIMEN_REQUIREMENT,
 				"CATISSUE_DISTRIBUTION_SPEC_REQ");
@@ -413,8 +413,8 @@ public class Client extends AbstractClient
 		//                Operator.AND));
 		//        ((SimpleQuery) query).addCondition(simpleConditionsNode);
 		//        System.out.println("\nQuery:\n" + query.getString());
-		//        
-		//        
+		//
+		//
 		//        /*---------------------------------------------------------------- */
 		//
 		//        /**
@@ -503,11 +503,11 @@ public class Client extends AbstractClient
 			child7 = new DefaultMutableTreeNode(advancedConditionsNode7);
 
 			//                ((AdvancedQuery)query).addCondition(advancedConditionsNode);
-			//                AdvancedConditionsNode advancedConditionsNode2 =new AdvancedConditionsNode(Query.SPECIMEN); 
+			//                AdvancedConditionsNode advancedConditionsNode2 =new AdvancedConditionsNode(Query.SPECIMEN);
 			//                advancedConditionsNode2.addConditionToNode(new Condition(new DataElement("Sample","Type"),new Operator(Operator.EQUAL),"'RNA'"));
 			//                advancedConditionsNode2.addConditionToNode(new Condition(new DataElement("Sample","Quantity"),new Operator(Operator.GREATER_THAN),"5"));
 			//                child2 = new DefaultMutableTreeNode(advancedConditionsNode2);
-			//        
+			//
 			//                //        System.out.println(((AdvancedQuery)query).addCondition(advancedConditionsNode,advancedConditionsNode2));
 			AdvancedConditionsNode advancedConditionsNode3 = new AdvancedConditionsNode(
 					Query.SPECIMEN);
@@ -521,8 +521,8 @@ public class Client extends AbstractClient
 					new Operator(Operator.GREATER_THAN), "5"));
 			child3 = new DefaultMutableTreeNode(advancedConditionsNode3);
 			//        System.out.println(((AdvancedQuery)query).addCondition(advancedConditionsNode,advancedConditionsNode3));
-			//                
-			//                
+			//
+			//
 			AdvancedConditionsNode advancedConditionsNode8 = new AdvancedConditionsNode(
 					Query.SPECIMEN);
 			advancedConditionsNode8.addConditionToNode(new Condition(new DataElement(new Table(
