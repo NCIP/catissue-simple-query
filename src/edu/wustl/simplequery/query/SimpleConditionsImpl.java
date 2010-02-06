@@ -19,7 +19,7 @@ public class SimpleConditionsImpl extends ConditionsImpl
 {
 
 	/**
-	 * Vector of SimpleConditionsNode objects 
+	 * Vector of SimpleConditionsNode objects
 	 * This forms the storage of conditions in Simple Query Interface
 	 */
 	private Vector whereConditions = new Vector();
@@ -30,17 +30,22 @@ public class SimpleConditionsImpl extends ConditionsImpl
 	}
 
 	/**
-	 * Adds condition to whereConditions Vector 
+	 * Adds condition to whereConditions Vector
 	 * @param condition
 	 * @return true (as per the general contract of Collection.add).
 	 */
 	public boolean addCondition(SimpleConditionsNode condition)
 	{
+		String operator = condition.getCondition().getOperator().getOperator();
+		if(Operator.operatorMap.containsKey(operator))
+		{
+			condition.getCondition().getOperator().setOperator((String)Operator.operatorMap.get(operator));
+		}
 		return whereConditions.add(condition);
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public SimpleConditionsNode getCondition()
@@ -69,8 +74,8 @@ public class SimpleConditionsImpl extends ConditionsImpl
 			if (i == 0 && hasConditionsExceptActivityStatus())
 				whereConditionsString.append(" ( ");
 
-			// Separating the activity status fields from rest of the fields so that 
-			//they are not included in brackets. 
+			// Separating the activity status fields from rest of the fields so that
+			//they are not included in brackets.
 			//Assumption is that activity status conditions are always at the end
 			String field = simpleConditionsNode.getCondition().getDataElement().getField();
 			if (field != null && field.equalsIgnoreCase(Constants.ACTIVITY_STATUS_COLUMN))
@@ -117,11 +122,11 @@ public class SimpleConditionsImpl extends ConditionsImpl
 	//    public HashSet getConditionObjects()
 	//    {
 	//        HashSet set = new HashSet();
-	//        
+	//
 	//        /**
-	//         * For all elements in whereConditions add  
+	//         * For all elements in whereConditions add
 	//         * objects to the set
-	//         */ 
+	//         */
 	//        for(int i=0; i<whereConditions.size();i++)
 	//        {
 	//            SimpleConditionsNode conditionsNode = (SimpleConditionsNode)whereConditions.get(i);
@@ -131,7 +136,7 @@ public class SimpleConditionsImpl extends ConditionsImpl
 	//    }
 
 	/**
-	 * Inserts the specified condition at the specified position in whereConditions Vector. Shifts the element currently at 
+	 * Inserts the specified condition at the specified position in whereConditions Vector. Shifts the element currently at
 	 * that position (if any) and any subsequent elements to the right (adds one to their indices).
 	 * @param position index at which the specified element is to be inserted.
 	 * @param condition condition to be inserted
@@ -244,7 +249,7 @@ public class SimpleConditionsImpl extends ConditionsImpl
 	public void formatTree()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
