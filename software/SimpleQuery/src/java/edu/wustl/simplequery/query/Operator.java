@@ -10,6 +10,8 @@
 package edu.wustl.simplequery.query;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Operator implements Serializable
 {
@@ -42,7 +44,7 @@ public class Operator implements Serializable
 	/**
 	 * LESS THAN constant
 	 */
-	public static final String LESS_THAN = "<";
+	public static final String LESS_THAN = "Less than";
 
 	/**
 	 * AND constant
@@ -52,7 +54,7 @@ public class Operator implements Serializable
 	/**
 	 * GREATER THAN constant
 	 */
-	public static final String GREATER_THAN = ">";
+	public static final String GREATER_THAN = "Greater than";
 
 	public static final String EQUALS_CONDITION = "Equals";
 
@@ -74,12 +76,12 @@ public class Operator implements Serializable
 	/**
 	 * LESS THAN OR EQUALS constant
 	 */
-	public static final String LESS_THAN_OR_EQUALS = "<=";
+	public static final String LESS_THAN_OR_EQUALS = "Less than or Equal to";
 
 	/**
 	 * GREATER THAN OR EQUALS constant
 	 */
-	public static final String GREATER_THAN_OR_EQUALS = ">=";
+	public static final String GREATER_THAN_OR_EQUALS = "Greater than or Equal to";
 
 	/**
 	 * BETWEEN constant
@@ -105,6 +107,13 @@ public class Operator implements Serializable
 	 * CONTAINS WITH constant
 	 */
 	public static final String CONTAINS = "Contains";
+
+	public static final Map<Object,Object> operatorMap = new HashMap<Object,Object>()
+	{{put(LESS_THAN,"<");
+	  put(LESS_THAN_OR_EQUALS,"<=");
+	  put(GREATER_THAN,">");
+	  put(GREATER_THAN_OR_EQUALS,">=");
+	}};
 
 	/**
 	 * Operator String
