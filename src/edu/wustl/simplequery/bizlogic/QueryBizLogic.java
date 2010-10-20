@@ -336,6 +336,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		identifiedData.add("LAST_NAME");
 		identifiedData.add("MIDDLE_NAME");
 		identifiedData.add("BIRTH_DATE");
+		identifiedData.add("DEATH_DATE");
 		identifiedData.add("SOCIAL_SECURITY_NUMBER");
 		Client.identifiedDataMap.put(Query.PARTICIPANT, identifiedData);
 

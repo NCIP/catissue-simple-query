@@ -158,7 +158,7 @@ public class SimpleQueryInterfaceAction extends SecureAction
 				+ "_Condition_DataElement_table";
 		String prevValue = (String) simpleQueryInterfaceForm.getValue(prevKey);
 		String calKey = "SimpleConditionsNode:" + index + "_showCalendar";
-		simpleQueryInterfaceForm.setShowCalendar(calKey, "");
+//		simpleQueryInterfaceForm.setShowCalendar(calKey, "");
 		if (prevValue == null)
 		{
 			String aliasName = request.getParameter(Constants.TABLE_ALIAS_NAME);
@@ -219,11 +219,11 @@ public class SimpleQueryInterfaceAction extends SecureAction
 
 	protected String getObjectId(AbstractActionForm form)
 	{
-	
+
 		return null;
 	}
 
-	
+
 	protected boolean isAuthorizedToExecute(HttpServletRequest request)
 	{
 		return true;
