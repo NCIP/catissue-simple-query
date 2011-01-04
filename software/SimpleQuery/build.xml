@@ -11,7 +11,6 @@
 		<property name="software.dir" value=".."/>
 		<property name="target.dir" value="${software.dir}/target"/>
 		<property name="temp.dir" value="${software.dir}/target/temp"/>
-		<property name="dist.dir" value="${software.dir}/target/dist/exploded/SimpleQuery-webapp"/>
 		<property name="local-ivy-repo.dir" value="${software.dir}/local-ivy-repo"/>
 
 		<property file="${software.dir}/SimpleQuery/src/conf/simplequery.properties"/>
@@ -107,10 +106,10 @@
 			<antcall target="build_code_zip" />
 		</target>
 	<target name="build_code_zip" depends="compile">
-					<zip destfile="${dist.dir}/SQ-${simplequery.jar.version}-src.zip">
-				<fileset dir="${src.dir}" includes="**/*" />
-			</zip>
-		</target>
+		<copy todir="${dist.dir}">
+			<fileset dir="${src.dir}" includes="**/*" />
+		</copy>
+	</target>
 
     <target name="dist" depends="build_jar">
 
