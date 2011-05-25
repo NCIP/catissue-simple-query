@@ -1,0 +1,119 @@
+<?xml version ="1.0"?>
+
+<!--Ant Script for create Build for SimpleQuery -->
+<project name="SimpleQuery" default="compile" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+
+		<property name="base.dir" value="." />
+		<property name="lib.dir" value="${base.dir}/src/lib"/>
+		<property name="src.dir" value="${base.dir}/src/java" />
+	    <property name="test.dir" value="${base.dir}/test/unit/java"/>
+		<property name="software.dir" value=".."/>
+		<property name="target.dir" value="${software.dir}/target"/>
+		<property name="temp.dir" value="${software.dir}/target/temp"/>
+		<property name="local-ivy-repo.dir" value="${software.dir}/local-ivy-repo"/>
+
+		<property file="${software.dir}/SimpleQuery/src/conf/simplequery.properties"/>
+
+
+	<loadfile property="dist.revision" srcFile="./.svn/entries">
+					<filterchain>
+						<headfilter lines="1" skip="4"/>
+					</filterchain>
+	</loadfile>
+
+
+
+
+	<!--ivy:retrieve related tags start here-->
+	<property name="common.dir" location="${software.dir}/common" />
+
+
+	<property name="bda-utils.dir" location="${target.dir}/bda-utils" />
+		<property name="project.properties.file" value="${software.dir}/build/project.properties" />
+		<property file="${project.properties.file}" />
+		<import file="${bda-utils.dir}/bda-build-utils-${bda.version}.xml" />
+
+
+		<path id="bda-utils.classpath">
+			<fileset dir="${bda-utils.dir}">
+				<include name="**/*.jar" />
+			</fileset>
+		</path>
+		<path id="ivy.classpath">
+			<fileset dir="${target.dir}/lib">
+				<include name="ivy-2.0.0.jar" />
+			</fileset>
+		</path>
+
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.classpath" />
+		<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"  classpathref="bda-utils.classpath"/>
+		<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="bda-utils.classpath"/>
+
+	<property name="ivy.settings.file" location="${common.dir}/ivy/cbiit-ivy-settings.xml" />
+			<target name="ivy-settings">
+				<property name="ivy.dep.file" value="${common.dir}/bda-download/ivy-bda.xml"/>
+				<ivy:settings file="${ivy.settings.file}"/>
+			</target>
+		<target name="retrieve-ivy-files" depends="ivy-settings"  description="Updates the local ivy repository">
+			<ivy:resolve refresh="true" conf="app_lib"/>
+			<ivy:retrieve pattern="${lib.dir}/[artifact]-[revision].[ext]" conf="app_lib" />
+
+		</target>
+
+	<!--ivy:retrieve related tags end here-->
+
+	<target name="compile" depends="init,retrieve-ivy-files">
+			<javac destdir="${temp.dir}" includes="**/*.*" debug="on" includeAntRuntime="false" target="1.5">
+				<src path="${src.dir}" />
+				<classpath>
+					<fileset dir="${lib.dir}">
+						<include name="*.jar" />
+					</fileset>
+				</classpath>
+			</javac>
+			<copy todir="${temp.dir}">
+				<fileset dir="${src.dir}">
+					<include name="**/*.properties" />
+					<include name="**/*.xml" />
+					<include name="**/*.hbm.xml" />
+					<include name="**/*.ser" />
+				</fileset>
+			</copy>
+		</target>
+	<!-- sub tasks -->
+		<target name="init">
+			<!-- Create the time stamp -->
+			<tstamp />
+
+		</target>
+	<target name="build_jar" depends="compile">
+			<tstamp />
+			<jar taskname="build_jar" jarfile="${local-ivy-repo.dir}/SimpleQuery-${simplequery.jar.version}.jar">
+				<fileset dir="${temp.dir}">
+					<include name="**/*" />
+				</fileset>
+				<manifest>
+				  <section name="${simplequery.jar.details}">
+					<attribute name="Version" value="${simplequery.jar.version}"/>
+					<attribute name="Built-By" value="${simplequery.jar.creator}" />
+					<attribute name="Build-on" value="${TODAY} ${TSTAMP}" />
+					<attribute name="SVN-URL" value="${dist.revision}" />
+				  </section>
+				</manifest>
+			</jar>
+
+			<antcall target="build_code_zip" />
+		</target>
+	<target name="build_code_zip" depends="compile">
+		<copy todir="${dist.dir}">
+			<fileset dir="${src.dir}" includes="**/*" />
+		</copy>
+	</target>
+
+    <target name="dist" depends="build_jar">
+
+    </target>
+
+
+</project>
