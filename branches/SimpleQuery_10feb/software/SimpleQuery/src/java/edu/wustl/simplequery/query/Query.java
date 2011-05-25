@@ -1,15 +1,23 @@
 
 package edu.wustl.simplequery.query;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+
+import oracle.sql.CLOB;
 
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
@@ -22,6 +30,7 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.query.executor.AbstractQueryExecutor;
 import edu.wustl.security.exception.SMException;
 import edu.wustl.simplequery.global.Constants;
@@ -40,7 +49,7 @@ import edu.wustl.simplequery.global.Constants;
  * <p>
  * Company: Washington University, School of Medicine, St. Louis.
  * </p>
- * 
+ *
  * @author Aarti Sharma
  * @version 1.0
  */
@@ -166,7 +175,7 @@ public abstract class Query
 
 	public static final String DISTRIBUTION_PROTOCOL = "DistributionProtocol";
 	public static final String DISTRIBUTION = "Distribution";
-	
+
 	public static final String DISTRIBUTION_ARRAY = "Distribution_array";
 
 
@@ -199,7 +208,7 @@ public abstract class Query
 	 *            TODO
 	 * @param hasConditionOnIdentifiedField TODO
 	 * @param columnIdsMap
-	 * 
+	 *
 	 * @return Returns true in case everything is successful else false
 	 * @throws SQLException
 	 */
@@ -217,10 +226,10 @@ public abstract class Query
 	 * @param isSecureExecute
 	 * @param queryResultObjectDataMap TODO
 	 * @param hasConditionOnIdentifiedField
-	 * @param startIndex 
+	 * @param startIndex
 	 * @param totoalRecords
 	 * @param columnIdsMap
-	 * 
+	 *
 	 * @return Returns PagenatedResultData which contains following information:
 	 * - sublist of the resultset depending upon startIndex & totoalRecords
 	 * - total number of records resulting from the query.
@@ -238,7 +247,10 @@ public abstract class Query
 			dao.openSession(null);
 			String sql = getString();
 			Logger.out.debug("SQL************" + sql);
-			
+			//Audit Query
+			   insertQuery(sql,sessionDataBean);
+            //Audited query
+
 			QueryParams queryParams = new QueryParams();
 			queryParams.setQuery(sql);
 			queryParams.setSessionDataBean(sessionDataBean);
@@ -249,7 +261,7 @@ public abstract class Query
 			queryParams.setNoOfRecords(totoalRecords);
 			AbstractQueryExecutor queryExecutor = edu.wustl.query.util.global.Utility.getQueryExecutor();
 			PagenatedResultData pagenatedResultData = queryExecutor.getQueryResultList(queryParams);
-			
+
 			dao.closeSession();
 			return pagenatedResultData;
 		}
@@ -265,12 +277,12 @@ public abstract class Query
 			ErrorKey errorKey = ErrorKey.getErrorKey("simple.query.error");
 			throw new DAOException(errorKey,classExp ,"SpecimenCollectionGroup.java :");
 		}
-	
+
 		}
 
 	/**
 	 * Adds the dataElement to result view.
-	 * 
+	 *
 	 * @param dataElement -
 	 *            Data Element to be added.
 	 * @return - true (as per the general contract of Collection.add).
@@ -287,7 +299,7 @@ public abstract class Query
 
 	/**
 	 * Adds the dataElement to result view
-	 * 
+	 *
 	 * @param dataElement -
 	 *            Data Element to be added
 	 * @return - true (as per the general contract of Collection.add).
@@ -299,7 +311,7 @@ public abstract class Query
 
 	/**
 	 * Returns the SQL representation of this query object
-	 * 
+	 *
 	 * @return
 	 * @throws SQLException
 	 */
@@ -326,7 +338,7 @@ public abstract class Query
 		set.addAll(getLinkingTables(set));
 		//START: Fix for Bug#1992
 		set.addAll(getChildrenTables(set));
-		//END: Fix for Bug#1992		
+		//END: Fix for Bug#1992
 		Logger.out.debug("Set : " + set.toString());
 		//		query.append("\nFROM ");
 		String joinConditionString = this.getJoinConditionString(set);
@@ -342,8 +354,8 @@ public abstract class Query
 		 * Name: Prafull
 		 * Description: Query performance issue. Instead of saving complete query results in session, resultd will be fetched for each result page navigation.
 		 * object of class QuerySessionData will be saved session, which will contain the required information for query execution while navigating through query result pages.
-		 * 
-		 *  Appending Order by clause to the SQL.  
+		 *
+		 *  Appending Order by clause to the SQL.
 		 */
 		query.append(getOrderByClauseString());
 
@@ -510,7 +522,7 @@ public abstract class Query
 	/**
 	 * This method returns set of all objects related to queryStartObject
 	 * transitively
-	 * 
+	 *
 	 * @param string -
 	 *            Starting object to which all related objects should be found
 	 * @return set of all objects related to queryStartObject transitively
@@ -543,7 +555,7 @@ public abstract class Query
 	 * This method returns the Join Conditions string that joins all the
 	 * tables/objects in the set. In case its a subquery relation with the
 	 * superquery is also appended in this string
-	 * 
+	 *
 	 * @param set -
 	 *            objects in the query
 	 * @return - string containing all join conditions
@@ -723,7 +735,7 @@ public abstract class Query
 				Logger.out.debug("*********relationCondition:" + relationCondition + "  "
 						+ joinRelation);
 				//START: Fix for Bug#1992
-				//Add the 
+				//Add the
 				//				set.add(new Table(relationCondition.getRightDataElement().getTableAliasName()));
 				//END: Fix for Bug#1992
 			}
@@ -756,7 +768,7 @@ public abstract class Query
 				//						Logger.out.debug("Parent is derived specimen");
 				//						leftDataElement.setTable(new Table(Query.SPECIMEN,Query.SPECIMEN+levelOfParent+"L"));
 				//						leftDataElement.setTable(new Table(Query.SPECIMEN,Query.SPECIMEN+levelOfParent+"L"));
-				//						
+				//
 				//					}
 				//					else
 				//					{
@@ -808,7 +820,7 @@ public abstract class Query
 	/**
 	 * This method returns the string of table names in set that forms FROM part
 	 * of query which forms the FROM part of the query
-	 * 
+	 *
 	 * @param set -
 	 *            set of tables
 	 * @return A comma separated list of the tables in the set
@@ -879,7 +891,7 @@ public abstract class Query
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List getResultView()
@@ -897,7 +909,7 @@ public abstract class Query
 			IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			JDBCDAO dao = daofactory.getJDBCDAO();
 			dao.openSession(null);
-			// Commenting this variable as its not used in code.			
+			// Commenting this variable as its not used in code.
 			//			String sqlString = "SELECT tableData2.ALIAS_NAME from CATISSUE_QUERY_TABLE_DATA tableData2 "
 			//					+ "join (SELECT CHILD_TABLE_ID FROM CATISSUE_TABLE_RELATION relationData,"
 			//					+ "CATISSUE_QUERY_TABLE_DATA tableData "
@@ -920,7 +932,7 @@ public abstract class Query
 			Logger.out.debug("Could not obtain related tables. Exception:" + daoExp.getMessage(),
 					daoExp);
 		}
-		
+
 		Logger.out.debug("Tables related to " + aliasName + " " + relatedTableNames.toString());
 		return relatedTableNames;
 	}
@@ -1046,7 +1058,7 @@ public abstract class Query
 	/**
 	 * This method returns all the column numbers in the query that belong to
 	 * tableAlias and the related tables passed as parameter
-	 * 
+	 *
 	 * @param tableAlias
 	 * @param relatedTables
 	 * @return
@@ -1091,7 +1103,7 @@ public abstract class Query
 	 * This method returns all the column numbers in the query that belong to
 	 * tableAlias and the related and are Identified Columns tables passed as
 	 * parameter
-	 * 
+	 *
 	 * @param tableAlias
 	 * @param relatedTables
 	 * @return
@@ -1147,7 +1159,7 @@ public abstract class Query
 	 * objects in tableAliasVector. In case there is no identifier column in the
 	 * query for some table alias om the vector then that column is by default
 	 * included in the resultant query
-	 * 
+	 *
 	 * @param tableAliasVector
 	 * @return
 	 */
@@ -1202,8 +1214,8 @@ public abstract class Query
 
 	/**
 	 * This method returns 'tableAlias.ColumnName' -> column id map of all the
-	 * objects in select part of query. 
-	 * 
+	 * objects in select part of query.
+	 *
 	 * @return
 	 */
 	public Map getColumnIdsMap()
@@ -1254,8 +1266,8 @@ public abstract class Query
 	}
 
 	/**
-	 * This method returns true if the query made 
-	 * is on any of the identified fields else false 
+	 * This method returns true if the query made
+	 * is on any of the identified fields else false
 	 * @return
 	 */
 	public boolean hasConditionOnIdentifiedField()
@@ -1335,5 +1347,300 @@ public abstract class Query
 	public void addToOrderByAttributeList(DataElement attributeName)
 	{
 		orderByAttributeList.add(attributeName);
+	}
+
+	/**
+	 * Audits Query.
+	 * @param sqlQuery sql Query.
+	 * @param sessionData session Data.
+	 * @throws DAOException generic DAOException.
+	 * @return auditEventId Audit event id
+	 */
+	public long insertQuery(String sqlQuery, SessionDataBean sessionData) throws DAOException
+	{
+		long auditEventId = 1;
+		String appName=CommonServiceLocator.getInstance().getAppName();
+		IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
+		JDBCDAO jdbcDAO = daofactory.getJDBCDAO();
+		jdbcDAO.openSession(null);
+		try
+		{
+			String sqlQuery1 = sqlQuery;//.replaceAll("'", "''");
+			String comments = "Simple Query";
+			if("ORACLE".equalsIgnoreCase(daofactory.getDataBaseType()))
+			{
+				auditEventId = executeAuditSqlForOracle(sqlQuery, sessionData, comments,jdbcDAO);
+			}
+			else
+			{
+				//MYSQL,MSSQLSERVER
+				auditEventId = executeAuditSqlMySQL(sqlQuery1, sessionData,
+						comments,jdbcDAO);
+			}
+			jdbcDAO.commit();
+		}
+		catch (DAOException e)
+		{
+			throw e;
+		}
+		finally
+		{
+			jdbcDAO.closeSession();
+		}
+		return auditEventId;
+	}
+
+	/**
+	 * This method inserts sql statement in audit tables.
+	 * @param sqlQuery1 sql to be audited
+	 * @param sessionData A data bean that contains information related to user logged in.
+	 * @param comments comments to be inserted in audit tables
+	 * @param jdbcDAO JDBCDAO object
+	 * @return auditEventId Audit event id
+	 * @throws DAOException Exception to be thrown
+	 */
+	private long executeAuditSqlMySQL(String sqlQuery1, SessionDataBean sessionData,
+			String comments,JDBCDAO jdbcDAO) throws DAOException
+	{
+		long auditEventId = -1;
+		SimpleDateFormat fSDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeStamp = fSDateFormat.format(new Date());
+		String ipAddress = sessionData.getIpAddress();
+		LinkedList<Object> data = new LinkedList<Object>();
+		String userId = sessionData.getUserId().toString();
+		data.add(ipAddress);
+		data.add(timeStamp);
+		data.add(userId);
+		data.add(comments);
+		LinkedList<ColumnValueBean> columnValueBean = populateColumnValueBean(data);
+		LinkedList<LinkedList<ColumnValueBean>> beanList = new LinkedList<LinkedList<ColumnValueBean>>();
+		beanList.add(columnValueBean);
+		String sqlForAudiEvent = "insert into catissue_audit_event" +
+				"(IP_ADDRESS,EVENT_TIMESTAMP,USER_ID ,COMMENTS) values (?,?,?,?)";
+		jdbcDAO.executeUpdate(sqlForAudiEvent, beanList);
+
+		data = new LinkedList<Object>();
+		data.add(userId);
+		columnValueBean = populateColumnValueBean(data);
+		String sql = "select max(identifier) from catissue_audit_event where USER_ID=?";
+
+		List list;
+		list = jdbcDAO.executeQuery(sql, null, columnValueBean);
+		if (!list.isEmpty())
+		{
+			auditEventId = getAuditEventId(auditEventId, list);
+		}
+		insertQueryAuditDetails(sqlQuery1, jdbcDAO, auditEventId);
+		return auditEventId ;
+	}
+
+	/**
+	 * This method inserts sql statement in audit tables.
+	 * @param sqlQuery sql to be audited
+	 * @param sessionData
+	 * @param comments comments to be inserted in audit tables
+	 * @throws DAOException Exception to be thrown
+	 */
+	public long executeAuditSqlForOracle(String sqlQuery, SessionDataBean sessionData, String comments,JDBCDAO jdbcDAO)
+			throws DAOException
+	{
+		long auditEventId = -1;
+		String sql = "select CATISSUE_AUDIT_EVENT_PARAM_SEQ.nextVal from dual";
+		try
+		{
+			List list = jdbcDAO.executeQuery(sql);
+			if (!list.isEmpty())
+			{
+				auditEventId = getAuditEventId(auditEventId, list);
+			}
+			long queryNo = executeAuditEventQuery(comments, jdbcDAO,
+					auditEventId, sessionData);
+
+			executeQueryLogSql(sqlQuery, jdbcDAO, auditEventId, queryNo);
+		}
+		catch (IOException e)
+		{
+			throw new DAOException(ErrorKey.getErrorKey("query.errors.item"), e,
+			"Failed while writing to output stream.");
+		}
+		catch (SQLException e)
+		{
+			throw new DAOException(ErrorKey.getErrorKey("query.errors.item"), e,
+			"Failed while getting output stream from the CLOB object");
+		}
+		return auditEventId;
+	}
+
+	/**
+	 * @param data data
+	 * @return columnValueBean
+	 */
+	private static LinkedList<ColumnValueBean> populateColumnValueBean(LinkedList<Object> data)
+	{
+		LinkedList<ColumnValueBean> columnValueBean = new LinkedList<ColumnValueBean>();
+		ColumnValueBean bean = null;
+		for(Object object : data)
+		{
+			bean = new ColumnValueBean(object.toString(), object);
+			columnValueBean.add(bean);
+		}
+		return columnValueBean;
+	}
+
+	/**
+	 * @param auditEventId identifier
+	 * @param list list
+	 * @return auditEventId
+	 */
+	private long getAuditEventId(long auditEventId, List list)
+	{
+		long tempAuditEventId = auditEventId;
+		List columnList = (List) list.get(0);
+		if (!columnList.isEmpty())
+		{
+			String str = (String) columnList.get(0);
+			if (!"".equals(str))
+			{
+				tempAuditEventId = Long.parseLong(str);
+			}
+		}
+		return tempAuditEventId;
+	}
+
+	/**
+	 * Insert the query details in catissue_audit_event table.
+	 * @param comments comments
+	 * @param jdbcDAO jdbcDAO
+	 * @param auditEventId auditEventId
+	 * @param sessionData A data bean that contains information related to user logged in.
+	 * @return queryNo
+	 * @throws DAOException DAOException
+	 */
+	private long executeAuditEventQuery(String comments, JDBCDAO jdbcDAO,
+			long auditEventId, SessionDataBean sessionData)
+			throws DAOException
+	{
+		String ipAddress = sessionData.getIpAddress();
+		String userId = sessionData.getUserId().toString();
+		SimpleDateFormat fSDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeStamp = fSDateFormat.format(new Date());
+		String sql;
+		List list;
+		LinkedList<Object> data = new LinkedList<Object>();
+		data.add(auditEventId);
+		data.add(ipAddress);
+		data.add(timeStamp);
+		data.add(userId);
+		data.add(comments);
+		LinkedList<ColumnValueBean> columnValueBean = populateColumnValueBean(data);
+		LinkedList<LinkedList<ColumnValueBean>> beanList =
+			new LinkedList<LinkedList<ColumnValueBean>>();
+		beanList.add(columnValueBean);
+		String sqlForAudiEvent = "insert into catissue_audit_event" +
+		"(IDENTIFIER,IP_ADDRESS,EVENT_TIMESTAMP,USER_ID ,COMMENTS) values" +
+		" (?,?,"+ "to_date(?,'yyyy-mm-dd HH24:MI:SS'),?,?)";
+		Logger.out.info("sqlForAuditLog:" + sqlForAudiEvent);
+		jdbcDAO.executeUpdate(sqlForAudiEvent,beanList);
+		long queryNo = 1;
+		sql = "select CATISSUE_AUDIT_EVENT_QUERY_SEQ.nextVal from dual";
+		list = jdbcDAO.executeQuery(sql);
+		if (!list.isEmpty())
+		{
+			queryNo = getAuditEventId(queryNo, list);
+		}
+		return queryNo;
+	}
+
+	/**
+	 * @param sqlQuery1 query
+	 * @param jdbcDAO DAO
+	 * @param auditEventId audit event identifier
+	 * @throws DAOException DAOException
+	 */
+	private void insertQueryAuditDetails(String sqlQuery1, JDBCDAO jdbcDAO,
+			long auditEventId) throws DAOException
+	{
+		LinkedList<Object> data;
+		LinkedList<ColumnValueBean> columnValueBean;
+		LinkedList<LinkedList<ColumnValueBean>> beanList;
+		data = new LinkedList<Object>();
+		data.add(auditEventId);
+		columnValueBean = populateColumnValueBean(data);
+		beanList = new LinkedList<LinkedList<ColumnValueBean>>();
+		beanList.add(columnValueBean);
+		String sqlForQueryLog = "insert into catissue_audit_event_query_log" +
+				"(QUERY_DETAILS,AUDIT_EVENT_ID) values (\""
+				+ sqlQuery1 + "\",?)";
+		Logger.out.debug("sqlForQueryLog:" + sqlForQueryLog);
+		jdbcDAO.executeUpdate(sqlForQueryLog, beanList);
+	}
+
+	/**
+	 * Insert details into catissue_audit_event_query_log table.
+	 * @param sqlQuery sqlQuery
+	 * @param jdbcDAO jdbcDAO
+	 * @param auditEventId auditEventId
+	 * @param queryNo queryNo
+	 * @throws DAOException DAOException
+	 * @throws SQLException SQLException
+	 * @throws IOException IOException
+	 */
+	private void executeQueryLogSql(String sqlQuery, JDBCDAO jdbcDAO,
+			long auditEventId, long queryNo) throws DAOException, SQLException,
+			IOException
+	{
+		List list;
+		LinkedList<Object> data = new LinkedList<Object>();
+		data.add(queryNo);
+		data.add(auditEventId);
+		LinkedList<ColumnValueBean> columnValueBean = populateColumnValueBean(data);
+		LinkedList<LinkedList<ColumnValueBean>> beanList =
+			new LinkedList<LinkedList<ColumnValueBean>>();
+		beanList.add(columnValueBean);
+		String sqlForQueryLog = "insert into catissue_audit_event_query_log" +
+				"(IDENTIFIER,QUERY_DETAILS,AUDIT_EVENT_ID) "
+				+ "values (?,EMPTY_CLOB(),?)";
+		jdbcDAO.executeUpdate(sqlForQueryLog, beanList);
+		list = populateList(jdbcDAO, queryNo);
+		CLOB clob = null;
+		if (!list.isEmpty())
+		{
+			List columnList = (List) list.get(0);
+			if (!columnList.isEmpty())
+			{
+				clob = (CLOB) columnList.get(0);
+			}
+		}
+		//			get output stream from the CLOB object
+		OutputStream ostream = clob.getAsciiOutputStream();
+		OutputStreamWriter osw = new OutputStreamWriter(ostream);
+		//		use that output stream to write character data to the Oracle data store
+		osw.write(sqlQuery.toCharArray());
+		//write data and commit
+		osw.flush();
+		osw.close();
+		ostream.close();
+		Logger.out.info("sqlForQueryLog:" + sqlForQueryLog);
+	}
+
+	/**
+	 * @param jdbcDAO DAO
+	 * @param queryNo query number
+	 * @return list
+	 * @throws DAOException DAOException
+	 */
+	private List populateList(JDBCDAO jdbcDAO, long queryNo)
+			throws DAOException
+	{
+		List list;
+		LinkedList<Object> data;
+		LinkedList<ColumnValueBean> columnValueBean;
+		data = new LinkedList<Object>();
+		data.add(queryNo);
+		columnValueBean = populateColumnValueBean(data);
+		String sql1 = "select QUERY_DETAILS from catissue_audit_event_query_log" +
+				" where IDENTIFIER=? for update";
+		list = jdbcDAO.executeQuery(sql1, null, columnValueBean);
+		return list;
 	}
 }
