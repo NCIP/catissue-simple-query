@@ -3,6 +3,8 @@
 <!--Ant Script for create Build for SimpleQuery -->
 <project name="SimpleQuery" default="dist" basedir=".">
 
+    <import file="ivy-targets.xml" />
+
     <property file="${basedir}/conf/simplequery.properties"/>
     <property name="lib.dir" value="${basedir}/lib"/>
     <property name="dist.dir" value="${basedir}/dist"/>
@@ -15,7 +17,7 @@
         </filterchain>
     </loadfile>
 
-    <target name="compile" depends="init">
+    <target name="compile" depends="init, resolve">
         <javac destdir="${target.dir}" includes="**/*.*" debug="on" includeAntRuntime="false" target="1.5">
             <src path="${src.dir}"/>
             <classpath>
@@ -36,21 +38,16 @@
 
     <target name="clean">
         <delete dir="${target.dir}"/>
-        <delete dir="${dist.dir}"/>
     </target>
 
     <target name="init">
         <tstamp/>
         <mkdir dir="${target.dir}"/>
-        <mkdir dir="${dist.dir}"/>
     </target>
 
     <target name="build_jar" depends="compile">
-        <delete>
-            <fileset dir="${dist.dir}" includes="**/*"/>
-        </delete>
         <tstamp/>
-        <jar taskname="build_jar" jarfile="${dist.dir}/SimpleQuery-${simplequery.jar.version}.jar">
+        <jar taskname="build_jar" jarfile="${dist.dir}/SimpleQuery.jar">
             <fileset dir="${target.dir}">
                 <include name="**/*"/>
             </fileset>
@@ -68,7 +65,7 @@
     </target>
 
     <target name="build_code_zip" depends="compile">
-        <zip destfile="${dist.dir}/SQ-${simplequery.jar.version}-src.zip">
+        <zip destfile="${dist.dir}/SimpleQuery-src.zip">
             <fileset dir="${src.dir}" includes="**/*"/>
         </zip>
     </target>
