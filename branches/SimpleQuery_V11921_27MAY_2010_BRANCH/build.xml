@@ -1,0 +1,79 @@
+<?xml version ="1.0"?>
+
+<!--Ant Script for create Build for SimpleQuery -->
+<project name="SimpleQuery" default="dist" basedir=".">
+
+    <property file="${basedir}/conf/simplequery.properties"/>
+    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="dist.dir" value="${basedir}/dist"/>
+    <property name="src.dir" value="${basedir}/src/main/java"/>
+    <property name="target.dir" value="${basedir}/target/"/>
+
+    <loadfile property="dist.revision" srcFile="./.svn/entries">
+        <filterchain>
+            <headfilter lines="1" skip="4"/>
+        </filterchain>
+    </loadfile>
+
+    <target name="compile" depends="init">
+        <javac destdir="${target.dir}" includes="**/*.*" debug="on" includeAntRuntime="false" target="1.5">
+            <src path="${src.dir}"/>
+            <classpath>
+                <fileset dir="${lib.dir}">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+        <copy todir="${target.dir}">
+            <fileset dir="${src.dir}">
+                <include name="**/*.properties"/>
+                <include name="**/*.xml"/>
+                <include name="**/*.hbm.xml"/>
+                <include name="**/*.ser"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="clean">
+        <delete dir="${target.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="${target.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <target name="build_jar" depends="compile">
+        <delete>
+            <fileset dir="${dist.dir}" includes="**/*"/>
+        </delete>
+        <tstamp/>
+        <jar taskname="build_jar" jarfile="${dist.dir}/SimpleQuery-${simplequery.jar.version}.jar">
+            <fileset dir="${target.dir}">
+                <include name="**/*"/>
+            </fileset>
+            <manifest>
+                <section name="${simplequery.jar.details}">
+                    <attribute name="Version" value="${simplequery.jar.version}"/>
+                    <attribute name="Built-By" value="${simplequery.jar.creator}"/>
+                    <attribute name="Build-on" value="${TODAY} ${TSTAMP}"/>
+                    <attribute name="SVN-URL" value="${dist.revision}"/>
+                </section>
+            </manifest>
+        </jar>
+
+        <antcall target="build_code_zip"/>
+    </target>
+
+    <target name="build_code_zip" depends="compile">
+        <zip destfile="${dist.dir}/SQ-${simplequery.jar.version}-src.zip">
+            <fileset dir="${src.dir}" includes="**/*"/>
+        </zip>
+    </target>
+
+    <target name="dist" depends="build_jar">
+    </target>
+
+</project>
