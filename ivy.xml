@@ -1,0 +1,17 @@
+<ivy-module version="2.0">
+    <info organisation="gov.nih.nci.catissue" module="ivyTest"/>
+    <dependencies>
+
+<!--
+    ToDo Move dependencies to cbiit + maven
+    https://bugzilla.wustl.edu/bugzilla/show_bug.cgi?id=21223
+-->
+
+<!-- LOCAL SVN REPO -->
+		<dependency org="local" name="SimpleQuery" rev="1.0"/>
+
+<!-- PUBLIC REPO -->
+        <dependency org="log4j" name="log4j" rev="1.2.14"/>
+
+    </dependencies>
+</ivy-module>
