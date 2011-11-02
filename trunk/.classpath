@@ -7,7 +7,6 @@
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/CommonPackage_refactor"/>
 	<classpathentry kind="lib" path="lib/AdvanceQuery-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.5H3-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/asm-1.0.jar"/>
