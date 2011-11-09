@@ -1,5 +1,13 @@
 <ivy-module version="2.0">
-    <info organisation="gov.nih.nci.catissue" module="simple-query"/>
+
+	<info organisation="gov.nih.nci.catissue" module="simple-query" revision="${simplequery.jar.version}" status="integration" />
+	
+	<publications>
+		<artifact name="SimpleQuery-src" ext="zip" type="zip" />
+		<artifact name="SimpleQuery" ext="jar" type="jar" />
+		<artifact name="simple-query" ext="pom" type="pom" />
+	</publications>
+	
     <dependencies>
 
 <!--
