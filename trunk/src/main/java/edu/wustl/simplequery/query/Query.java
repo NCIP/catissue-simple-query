@@ -313,7 +313,9 @@ public abstract class Query
 		}
 		StringBuffer query = new StringBuffer();
 		HashSet set = new HashSet();
-
+		
+		Table mainQueryTable = new Table(this.queryStartObject,this.queryStartObject);
+		
 		/**
 		 * Forming SELECT part of the query.
 		 */
@@ -328,10 +330,13 @@ public abstract class Query
 		set.addAll(getChildrenTables(set));
 		//END: Fix for Bug#1992		
 		Logger.out.debug("Set : " + set.toString());
+		
+		set.remove(mainQueryTable);
+		
 		//		query.append("\nFROM ");
 		String joinConditionString = this.getJoinConditionString(set);
 		Logger.out.debug("Set After forming join string: " + set.toString());
-		query.append(this.formFromString(set));
+		query.append(this.formFromString(set,mainQueryTable));
 
 		/**
 		 * Forming WHERE part of the query
@@ -814,37 +819,62 @@ public abstract class Query
 	 * @return A comma separated list of the tables in the set
 	 * @throws SQLException
 	 */
-	protected String formFromString(final HashSet set) throws SQLException
+	protected String formFromString(final HashSet set, Table mainQueryTable) throws SQLException
 	{
-		if (set == null)
+		if (mainQueryTable.getTableName() == null)
 		{
-			throw new SQLException("Table set is null");
+			throw new SQLException("Query Start Object is null");
 		}
 		StringBuffer fromString = new StringBuffer();
-
-		fromString.append("\nFROM ");
-		Iterator it = set.iterator();
-
-		Table table;
-		String tableName;
-		while (it.hasNext())
+		StringBuffer unrelatedTables = new StringBuffer();
+		String tableName = (String) Client.objectTableNames.get(mainQueryTable.getTableName());
+		
+		fromString.append("\nFROM ").append((tableName).toUpperCase() + " "+ mainQueryTable.toSQLString() +tableSufix);
+		
+		if(set!= null)
 		{
-			fromString.append(" ");
-			table = (Table) it.next();
-			tableName = (String) Client.objectTableNames.get(table.getTableName());
-			Logger.out.debug(" Table name:" + table.getTableName());
-			if (tableName == null)
+			Object[] tablesArray = set.toArray();
+			Logger.out.debug(" tablesArray:" + Utility.getArrayString(tablesArray));
+			RelationCondition relationCondition = null;
+			
+			Table table1 = mainQueryTable;
+			Table table2;
+			
+			for (int j = 0; j < tablesArray.length; j++)
 			{
-				throw new SQLException("Unknown Object:" + table.getTableName());
-			}
-			fromString.append((tableName).toUpperCase() + " " + table.toSQLString() + tableSufix
-					+ " ");
-			if (it.hasNext())
-			{
-				fromString.append(",");
-			}
-		}
-		fromString.append(" ");
+				table2 = (Table) tablesArray[j];
+				tableName = (String) Client.objectTableNames.get(table2.getTableName());
+
+				if (table2.hasDifferentAlias())
+				{
+					unrelatedTables.append(" , "+ (tableName).toUpperCase() + " "+ table2.toSQLString() +tableSufix+ " ");
+					continue;
+				}
+
+				relationCondition = (RelationCondition) Client.relationConditionsForRelatedTables
+						.get(new Relation((String) table1.getTableName(), (String) table2
+								.getTableName()));
+
+				if (relationCondition == null)
+				{
+					relationCondition = (RelationCondition) Client.relationConditionsForRelatedTables
+							.get(new Relation((String) table2.getTableName(), (String) table1
+									.getTableName()));
+				}
+				if (relationCondition != null)
+				{
+					Logger.out.debug(table1.getTableName() + " " + table2.getTableName() + " "
+							+ relationCondition.toSQLString(tableSufix));
+					fromString.append("\n LEFT OUTER JOIN "+ (tableName).toUpperCase() + " "+ table2.toSQLString() + tableSufix
+					+ " ON "+relationCondition.toSQLString(tableSufix));
+				}
+				else
+				{
+					unrelatedTables.append(" , "+ (tableName).toUpperCase() + " "+ table2.toSQLString() +tableSufix + " ");
+				}
+			  }	
+	  }
+		fromString.append(unrelatedTables.toString());
 		return fromString.toString();
 	}
 
