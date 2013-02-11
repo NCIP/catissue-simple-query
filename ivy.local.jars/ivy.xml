@@ -7,11 +7,11 @@
       <artifact name="cde" ext="jar" type="jar"/>
       <artifact name="cglib" ext="jar" type="jar"/>
       <artifact name="codegen" ext="jar" type="jar"/>
-      <artifact name="commonpackage-1.1.8.2" ext="jar" type="jar"/>
+      <!-- <artifact name="commonpackage-1.1.8.2" ext="jar" type="jar"/> -->
       <artifact name="commons-collections-3.2" ext="jar" type="jar"/>
       <artifact name="commons-logging" ext="jar" type="jar"/>
       <artifact name="csmapi" ext="jar" type="jar"/>
-      <artifact name="DAO-1.1.9.2" ext="jar" type="jar"/>
+      <!-- <artifact name="DAO-1.1.9.2" ext="jar" type="jar"/> -->
       <artifact name="dom4j-1.6" ext="jar" type="jar"/>
       <artifact name="DynamicExtensions" ext="jar" type="jar"/>
       <artifact name="ehcache-1.2.3" ext="jar" type="jar"/>
@@ -21,9 +21,10 @@
       <artifact name="log4j" ext="jar" type="jar"/>
       <artifact name="ojdbc14" ext="jar" type="jar"/>
       <artifact name="query" ext="jar" type="jar"/>
-      <artifact name="securityManager-1.1.7.2" ext="jar" type="jar"/>
+      <!-- <artifact name="securityManager-1.1.7.2" ext="jar" type="jar"/> -->
       <artifact name="struts" ext="jar" type="jar"/>
-      <artifact name="washu-commons-1.1.7" ext="jar" type="jar"/>
+      <!-- <artifact name="washu-commons-1.1.7" ext="jar" type="jar"/> -->
+      <artifact name="washu-commons-1.2.w1" ext="jar" type="jar"/>
   </publications>
 </ivy-module>
 
