@@ -1,7 +1,7 @@
 Welcome to the caTissue Simple Query Project!
 =====================================
 
-caTissue Utilities is a Open Source project primarily used by caTissue Suite. It is written in Java using Hibernate, caTissue Advanced Query, caCORE CSM.
+caTissue Simple Query is a Open Source project primarily used by caTissue Suite. It is written in Java using Hibernate, caTissue Advanced Query, caCORE CSM.
 
 The caTissue Simple Query is distributed under the BSD 3-Clause License.
 Please see the NOTICE and LICENSE files for details.
