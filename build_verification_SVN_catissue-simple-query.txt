@@ -1,0 +1,142 @@
+Buildfile: C:\DEV\GIT-WORK\SVN\catissue_simple_query\build.xml
+
+init:
+
+download-ivy:
+    [mkdir] Created dir: C:\Users\konkapv\.ivy
+     [echo] Installing ivy...
+      [get] Getting: http://repo1.maven.org/maven2/org/apache/ivy/ivy/2.0.0/ivy-2.0.0.jar
+      [get] To: C:\Users\konkapv\.ivy\ivy.jar
+
+init-ivy:
+
+resolve:
+No ivy:settings found for the default reference 'ivy.instance'.  A default instance will be used
+[ivy:retrieve] :: Ivy 2.0.0 - 20090108225011 :: http://ant.apache.org/ivy/ ::
+:: loading settings :: file = C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivysettings.xml
+[ivy:retrieve] :: resolving dependencies :: gov.nih.nci.catissue#simple-query;1.2-SNAPSHOT
+[ivy:retrieve] 	confs: [default]
+[ivy:retrieve] 	found local#SimpleQuery;1.0 in local-repo-jars
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\ehcache-1.2.3.jar ...
+[ivy:retrieve] ..... (203kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!ehcache-1.2.3.jar (121ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\hibernate3.jar ...
+[ivy:retrieve] ................................ (1925kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!hibernate3.jar (165ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\commons-collections-3.2.jar ...
+[ivy:retrieve] .......... (557kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!commons-collections-3.2.jar (70ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\csmapi.jar ...
+[ivy:retrieve] ..... (216kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!csmapi.jar (56ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\cde.jar ...
+[ivy:retrieve] ... (105kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!cde.jar (44ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\codegen.jar ...
+[ivy:retrieve] ...... (257kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!codegen.jar (61ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\dom4j-1.6.jar ...
+[ivy:retrieve] ...... (306kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!dom4j-1.6.jar (106ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\DynamicExtensions.jar ...
+[ivy:retrieve] ................. (960kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!DynamicExtensions.jar (118ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\query.jar ...
+[ivy:retrieve] .... (131kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!query.jar (46ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\washu-commons-1.2.w1.jar ...
+[ivy:retrieve] ............. (733kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!washu-commons-1.2.w1.jar (85ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\j2ee.jar ...
+[ivy:retrieve] ............................ (1688kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!j2ee.jar (107ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\antlr-2.7.5H3.jar ...
+[ivy:retrieve] ........ (423kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!antlr-2.7.5H3.jar (62ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\struts.jar ...
+[ivy:retrieve] ......... (486kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!struts.jar (94ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\AdvanceQuery.jar ...
+[ivy:retrieve] ....... (361kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!AdvanceQuery.jar (56ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\asm.jar ...
+[ivy:retrieve] .. (25kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!asm.jar (45ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\log4j.jar ...
+[ivy:retrieve] ....... (347kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!log4j.jar (76ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\cglib.jar ...
+[ivy:retrieve] ...... (316kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!cglib.jar (59ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\ojdbc14.jar ...
+[ivy:retrieve] ......................... (1519kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!ojdbc14.jar (200ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\commons-logging.jar ...
+[ivy:retrieve] .. (37kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!commons-logging.jar (64ms)
+[ivy:retrieve] downloading C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivy.local.jars\junit-4.1.jar ...
+[ivy:retrieve] ... (109kB)
+[ivy:retrieve] 	[SUCCESSFUL ] local#SimpleQuery;1.0!junit-4.1.jar (60ms)
+[ivy:retrieve] :: resolution report :: resolve 975ms :: artifacts dl 1725ms
+	---------------------------------------------------------------------
+	|                  |            modules            ||   artifacts   |
+	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+	---------------------------------------------------------------------
+	|      default     |   1   |   1   |   1   |   0   ||   20  |   20  |
+	---------------------------------------------------------------------
+[ivy:retrieve] 
+[ivy:retrieve] 
+[ivy:retrieve] :: USE VERBOSE OR DEBUG MESSAGE LEVEL FOR MORE DETAILS
+[ivy:retrieve] :: retrieving :: gov.nih.nci.catissue#simple-query
+[ivy:retrieve] 	confs: [default]
+[ivy:retrieve] 	20 artifacts copied, 0 already retrieved (10714kB/102ms)
+
+compile:
+    [javac] Compiling 30 source files to C:\DEV\GIT-WORK\SVN\catissue_simple_query\target
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+     [copy] Copying 2 files to C:\DEV\GIT-WORK\SVN\catissue_simple_query\target
+
+build_jar:
+[build_jar] Building jar: C:\DEV\GIT-WORK\SVN\catissue_simple_query\dist\SimpleQuery.jar
+
+init:
+
+download-ivy:
+     [echo] Installing ivy...
+      [get] Getting: http://repo1.maven.org/maven2/org/apache/ivy/ivy/2.0.0/ivy-2.0.0.jar
+      [get] To: C:\Users\konkapv\.ivy\ivy.jar
+      [get] Not modified - so not downloaded
+
+init-ivy:
+
+resolve:
+No ivy:settings found for the default reference 'ivy.instance'.  A default instance will be used
+DEPRECATED: 'ivy.conf.file' is deprecated, use 'ivy.settings.file' instead
+[ivy:retrieve] :: Ivy 2.0.0 - 20090108225011 :: http://ant.apache.org/ivy/ ::
+:: loading settings :: file = C:\DEV\GIT-WORK\SVN\catissue_simple_query\ivysettings.xml
+[ivy:retrieve] :: resolving dependencies :: gov.nih.nci.catissue#simple-query;1.2-SNAPSHOT
+[ivy:retrieve] 	confs: [default]
+[ivy:retrieve] 	found local#SimpleQuery;1.0 in local-repo-jars
+[ivy:retrieve] :: resolution report :: resolve 87ms :: artifacts dl 33ms
+	---------------------------------------------------------------------
+	|                  |            modules            ||   artifacts   |
+	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+	---------------------------------------------------------------------
+	|      default     |   1   |   0   |   0   |   0   ||   20  |   0   |
+	---------------------------------------------------------------------
+[ivy:retrieve] :: retrieving :: gov.nih.nci.catissue#simple-query
+[ivy:retrieve] 	confs: [default]
+[ivy:retrieve] 	0 artifacts copied, 20 already retrieved (0kB/10ms)
+
+compile:
+
+build_code_zip:
+      [zip] Building zip: C:\DEV\GIT-WORK\SVN\catissue_simple_query\dist\SimpleQuery-src.zip
+
+dist:
+
+BUILD SUCCESSFUL
+Total time: 8 seconds
