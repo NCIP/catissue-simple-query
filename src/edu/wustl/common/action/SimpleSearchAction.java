@@ -176,15 +176,16 @@ public class SimpleSearchAction extends BaseAction
 		 * plus the attibute that was queried. And if selectedColumns is not null, then we
 		 * are showing only those attribute that are selected in Define View.
 		 */
+		boolean isForm = request.getParameter("fromForm")!=null?true:false;
 		if (selectedColumns != null)
 		{
 			selectDataElements = simpleQueryBizLogic.getSelectDataElements(selectedColumns,
-					aliasList, columnNames, true, null);
+					aliasList, columnNames, true, null,isForm);
 		}
 		else
 		{
 			selectDataElements = simpleQueryBizLogic.getSelectDataElements(selectedColumns,
-					aliasList, columnNames, true, fieldList);
+					aliasList, columnNames, true, fieldList,isForm);
 		}
 		query.setResultView(selectDataElements);
 		/**
@@ -302,15 +303,25 @@ public class SimpleSearchAction extends BaseAction
 			 *
 			 *  PagenatedResultData object will contain the query results
 			 */
-			pagenatedResultData = query.execute(getSessionData(request), isSecureExecute,
+			if(isForm){
+			    pagenatedResultData =  query.executeForForm(getSessionData(request), isSecureExecute,
+	                    queryResultObjectDataMap, hasConditionOnIdentifiedField, 0, recordsPerPage);
+			}else{
+			    pagenatedResultData = query.execute(getSessionData(request), isSecureExecute,
 					queryResultObjectDataMap, hasConditionOnIdentifiedField, 0, recordsPerPage);
+			}
 		}
 		else
 		{
 			isSecureExecute = false;
 			hasConditionOnIdentifiedField = false;
+			if(isForm){
+			    pagenatedResultData =  query.executeForForm(getSessionData(request), false, null, false, 0,
+	                    recordsPerPage);
+			}else{
 			pagenatedResultData = query.execute(getSessionData(request), false, null, false, 0,
 					recordsPerPage);
+			}
 		}
 		if (simpleQueryInterfaceForm.getPageOf().equals(Constants.PAGEOF_SIMPLE_QUERY_INTERFACE))
 		{

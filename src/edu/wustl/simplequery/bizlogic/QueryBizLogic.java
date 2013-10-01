@@ -454,6 +454,62 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		return columnNameValueBeanList;
 	}
 
+	public List getFormColumnNames(String value) throws DAOException, ClassNotFoundException
+    {
+        String sql = " SELECT tableData2.ALIAS_NAME, temp.COLUMN_NAME, temp.ATTRIBUTE_TYPE,"
+                + " temp.TABLES_IN_PATH, temp.DISPLAY_NAME,temp.ATTRIBUTE_ORDER "
+                + " from CATISSUE_QUERY_TABLE_DATA tableData2 join "
+                + " ( SELECT  columnData.COLUMN_NAME, columnData.TABLE_ID,"
+                + " columnData.ATTRIBUTE_TYPE, "
+                + " displayData.DISPLAY_NAME, displayData.ATTRIBUTE_ORDER ,"
+                + " relationData.TABLES_IN_PATH "
+                + " FROM CATISSUE_INTERFACE_COLUMN_DATA columnData, "
+                + " CATISSUE_TABLE_RELATION relationData, "
+                + " CATISSUE_QUERY_TABLE_DATA tableData, "
+                + " CATISSUE_SEARCH_DISPLAY_DATA displayData "
+                + " where relationData.CHILD_TABLE_ID = tableData.TABLE_ID and "
+                + " relationData.PARENT_TABLE_ID = tableData.TABLE_ID and "
+                + " relationData.RELATIONSHIP_ID = displayData.RELATIONSHIP_ID and "
+                + " columnData.IDENTIFIER = displayData.COL_ID and " + " tableData.ALIAS_NAME = '"
+                + value + "') temp "
+                + " on temp.TABLE_ID = tableData2.TABLE_ID ORDER BY temp.ATTRIBUTE_ORDER";
+
+        logger.debug("SQL*****************************" + sql);
+
+        String appName=CommonServiceLocator.getInstance().getAppName();
+        IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
+        JDBCDAO jdbcDao = daofactory.getJDBCDAO();
+
+
+        jdbcDao.openSession(null);
+        List list = jdbcDao.executeQuery(sql);
+        jdbcDao.closeSession();
+
+        List columnNameValueBeanList = new ArrayList();
+
+        Iterator iterator = list.iterator();
+        int j = 0;
+        while (iterator.hasNext())
+        {
+            List rowList = (List) iterator.next();
+            String columnValue = (String) rowList.get(j++) + "." + (String) rowList.get(j++) + "."
+                    + (String) rowList.get(j++);
+            String tablesInPath = (String) rowList.get(j++);
+            if ((tablesInPath != null) && (!"".equals(tablesInPath)))
+            {
+                columnValue = columnValue + "." + tablesInPath;
+            }
+            String columnName = (String) rowList.get(j++);
+            NameValueBean nameValueBean = new NameValueBean();
+            nameValueBean.setName(columnName);
+            nameValueBean.setValue(columnValue);
+            columnNameValueBeanList.add(nameValueBean);
+            j = 0;
+        }
+
+        return columnNameValueBeanList;
+    }
+
 	/**
 	 * Sets the next table names depending on the table in the previous row.
 	 * @param prevValue previous table name.

@@ -321,7 +321,7 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 	public Vector getSelectDataElements(String[] selectedColumns, List tableList, List columnNames)
 			throws DAOException
 	{
-		return getSelectDataElements(selectedColumns, tableList, columnNames, false);
+		return getSelectDataElements(selectedColumns, tableList, columnNames, false,false);
 	}
 
 	/**
@@ -335,14 +335,17 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 	 * @throws DAOException
 	 */
 	public Vector getSelectDataElements(String[] selectedColumns, List tableList, List columnNames,
-			boolean onlyDefaultAttributes) throws DAOException
+			boolean onlyDefaultAttributes,boolean isFormSearch) throws DAOException
 	{
 		Vector selectDataElements = null;
 
 		//If columns not conigured, set to default.
-		if (selectedColumns == null)
+		if (selectedColumns == null && isFormSearch)
 		{
-			selectDataElements = getViewElements(tableList, columnNames, onlyDefaultAttributes);
+			selectDataElements = getFormViewElements(tableList, columnNames, onlyDefaultAttributes);
+			
+		}else if(selectedColumns == null){
+		    selectDataElements = getViewElements(tableList, columnNames, onlyDefaultAttributes);
 		}
 		//else set to the configured columns.
 		else
@@ -374,9 +377,9 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 	 * @throws DAOException
 	 */
 	public Vector getSelectDataElements(String[] selectedColumns, List tableList, List columnNames,
-			boolean onlyDefaultAttributes, List fieldList) throws DAOException
+			boolean onlyDefaultAttributes, List fieldList,boolean isFormSearch) throws DAOException
 	{
-		Vector selectDataElements = getSelectDataElements(selectedColumns,tableList,columnNames,onlyDefaultAttributes);	
+		Vector selectDataElements = getSelectDataElements(selectedColumns,tableList,columnNames,onlyDefaultAttributes,isFormSearch);	
 		
 		/**
 		 * Bug-2778: Results should return at least the attribute that was queried.
@@ -600,6 +603,93 @@ public class SimpleQueryBizLogic extends DefaultBizLogic
 		
 		return vector;
 	}
+
+	/**
+     * Returns the Vector of DataElement objects for the select clause of the query.
+     * And also list the column names in the columnList list.
+     * @param aliasNameList The Set of the alias names for which the DataElements are to be created.
+     * @param columnList List of column names to be shown in the spreadsheet view.
+     * @param OnlyDefaultAttribute true if the required column should be Default view columns.
+     * @return the Vector of DataElement objects for the select clause of the query.
+     * @throws DAOException
+     */
+    
+    /**
+     * Bug#3549
+     * Patch 1_2
+     * Description:modified query to order the result by ATTRIBUTE_ORDER column.
+     */
+    
+    public Vector getFormViewElements(List aliasNameList, List columnList, boolean OnlyDefaultAttribute)
+            throws DAOException
+    {
+        Vector vector = new Vector();
+        String appName=CommonServiceLocator.getInstance().getAppName();
+            JDBCDAO jdbcDAO = DAOConfigFactory.getInstance().getDAOFactory(appName).
+            getJDBCDAO();
+            jdbcDAO.openSession(null);
+            
+            Iterator aliasNameIterator = aliasNameList.iterator();
+            while (aliasNameIterator.hasNext())
+            {
+                String aliasName = (String) aliasNameIterator.next();
+                
+                String sql = " SELECT tableData2.ALIAS_NAME, temp.COLUMN_NAME, temp.TABLES_IN_PATH, "
+                        + " temp.DISPLAY_NAME, temp.ATTRIBUTE_TYPE "
+                        + " from CATISSUE_QUERY_TABLE_DATA tableData2 join "
+                        + " ( SELECT  columnData.COLUMN_NAME, columnData.TABLE_ID, displayData.DISPLAY_NAME,displayData.ATTRIBUTE_ORDER, "
+                        + " relationData.TABLES_IN_PATH, columnData.ATTRIBUTE_TYPE "
+                        + " FROM CATISSUE_INTERFACE_COLUMN_DATA columnData, "
+                        + " CATISSUE_TABLE_RELATION relationData, "
+                        + " CATISSUE_QUERY_TABLE_DATA tableData, "
+                        + " CATISSUE_SEARCH_DISPLAY_DATA displayData "
+                        + " where relationData.CHILD_TABLE_ID = tableData.TABLE_ID and "
+                        + " relationData.PARENT_TABLE_ID = tableData.TABLE_ID and "
+                        + " relationData.RELATIONSHIP_ID = displayData.RELATIONSHIP_ID and ";
+
+                String defaultViewCondition = " displayData.DEFAULT_VIEW_ATTRIBUTE = 1 and ";
+
+                String sql1 = " columnData.IDENTIFIER = displayData.COL_ID and "
+                        + " tableData.ALIAS_NAME = '" + aliasName + "') temp "
+                        + " on temp.TABLE_ID = tableData2.TABLE_ID ORDER BY temp.ATTRIBUTE_ORDER ";
+
+                if (OnlyDefaultAttribute)
+                    sql = sql + defaultViewCondition + sql1;
+                else
+                    sql = sql + sql1;
+
+                
+
+                List list = jdbcDAO.executeQuery(sql);
+                String nameSql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where ALIAS_NAME='"
+                        + aliasName + "'";
+                List nameList = jdbcDAO.executeQuery(nameSql);
+                String tableDisplayName = new String();
+                if (!nameList.isEmpty())
+                {
+                    List rowNameList = (List) nameList.get(0);
+                    tableDisplayName = (String) rowNameList.get(0);
+                }
+            
+                Iterator iterator = list.iterator();
+                while (iterator.hasNext())
+                {
+                    List rowList = (List) iterator.next();
+                    DataElement dataElement = new DataElement();
+                    dataElement.setTableName((String) rowList.get(0));
+                    String fieldName = (String) rowList.get(1);
+
+                
+                    dataElement.setField(fieldName + "." + (String) rowList.get(2));
+                    dataElement.setFieldType((String) rowList.get(4));
+                    vector.add(dataElement);
+                    columnList.add((String) rowList.get(3) + " : " + tableDisplayName);
+                }
+            }
+            jdbcDAO.closeSession();
+        
+        return vector;
+    }
 
 	/**
 	 * @param fromAliasNameValue

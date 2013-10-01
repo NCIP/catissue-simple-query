@@ -158,6 +158,10 @@ public class SimpleQueryInterfaceAction extends SecureAction
 				+ "_Condition_DataElement_table";
 		String prevValue = (String) simpleQueryInterfaceForm.getValue(prevKey);
 		String calKey = "SimpleConditionsNode:" + index + "_showCalendar";
+		boolean isForm = false;
+		if(request.getParameter("isForm")!=null){
+		    isForm = true;
+		}
 //		simpleQueryInterfaceForm.setShowCalendar(calKey, "");
 		if (prevValue == null)
 		{
@@ -174,7 +178,12 @@ public class SimpleQueryInterfaceAction extends SecureAction
 			if ((aliasName != null) && (!"".equals(aliasName)))
 			{
 				request.setAttribute(Constants.TABLE_ALIAS_NAME, aliasName);
-				List<NameValueBean> columnNameList = queryBizLogic.getColumnNames(aliasName);
+				List<NameValueBean> columnNameList;
+		        if(isForm){
+		            columnNameList = queryBizLogic.getFormColumnNames(aliasName);
+		        }else {
+		            columnNameList = queryBizLogic.getColumnNames(aliasName);
+		        }
 				if (!columnNameList.isEmpty())
 				{
 					String attributeNameList = "attributeNameList1";

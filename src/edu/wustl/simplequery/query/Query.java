@@ -1,7 +1,11 @@
 
 package edu.wustl.simplequery.query;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,6 +15,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
+
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.PagenatedResultData;
@@ -19,6 +25,7 @@ import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
+import edu.wustl.dao.OracleDAOImpl;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
@@ -267,6 +274,211 @@ public abstract class Query
 		}
 	
 		}
+	
+	public PagenatedResultData executeForForm(SessionDataBean sessionDataBean, boolean isSecureExecute,
+            Map queryResultObjectDataMap, boolean hasConditionOnIdentifiedField, int startIndex,
+            int totoalRecords) throws DAOException, SQLException
+    {
+        try
+        {
+            String appName=CommonServiceLocator.getInstance().getAppName();
+            IDAOFactory daofactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
+            JDBCDAO dao = daofactory.getJDBCDAO();
+            dao.openSession(null);
+            String sql = getString();
+            Logger.out.debug("SQL************" + sql);
+            
+            QueryParams queryParams = new QueryParams();
+            queryParams.setQuery(sql);
+            queryParams.setSessionDataBean(sessionDataBean);
+            queryParams.setSecureToExecute(isSecureExecute);
+            queryParams.setHasConditionOnIdentifiedField(hasConditionOnIdentifiedField);
+            queryParams.setQueryResultObjectDataMap(queryResultObjectDataMap);
+            queryParams.setStartIndex(startIndex);
+            queryParams.setNoOfRecords(totoalRecords);
+            PagenatedResultData pagenatedResultData ;
+            boolean getSublistOfResult = startIndex != -1;
+                    
+            if(dao instanceof OracleDAOImpl){
+                pagenatedResultData =  createStatemtentAndExecuteQueryOracle(dao,queryParams,getSublistOfResult);
+            }else{
+                pagenatedResultData =  createStatemtentAndExecuteQuery(dao,queryParams,getSublistOfResult);
+            }
+           ResultSet resultSet = dao.getQueryResultSet(sql);
+            
+            dao.closeSession();
+            return pagenatedResultData;
+        }
+        catch (DAOException daoExp)
+        {
+            //have to change TBD
+            ErrorKey errorKey = ErrorKey.getErrorKey("simple.query.error");
+            throw new DAOException(errorKey,daoExp ,"SpecimenCollectionGroup.java :");
+        }
+        catch (SMException classExp)
+        {
+//          have to change TBD
+            ErrorKey errorKey = ErrorKey.getErrorKey("simple.query.error");
+            throw new DAOException(errorKey,classExp ,"SpecimenCollectionGroup.java :");
+        }
+    
+        }
+	
+	
+	protected PagenatedResultData createStatemtentAndExecuteQueryOracle(JDBCDAO jdbcDAO,QueryParams queryParams, boolean getSublistOfResult) throws SQLException, SMException, DAOException
+    {
+        String sqlToBeExecuted = queryParams.getQuery();
+        // modify the SQL by adding rownum condition if required.
+        if (getSublistOfResult)
+        {
+            sqlToBeExecuted = putPageNumInSQL(queryParams.getQuery(), queryParams.getStartIndex(), queryParams.getNoOfRecords());
+        }
+
+        // execute the modified query & get Results
+
+        ResultSet resultSet = jdbcDAO.getQueryResultSet(sqlToBeExecuted);
+        List list = getListFromResultSet(jdbcDAO,resultSet,queryParams);
+
+        // Find the total number of records that query can return.
+        int totalRecords;
+        if (getSublistOfResult)
+        {
+            sqlToBeExecuted = getCountQuery(queryParams.getQuery());
+            resultSet.close();
+            resultSet = jdbcDAO.getQueryResultSet(sqlToBeExecuted);
+            resultSet.next();
+            totalRecords = resultSet.getInt(1);
+        }
+        else
+        {
+            totalRecords = list.size(); // these are all records returned from query.
+        }
+        return new PagenatedResultData(list, totalRecords);
+    }
+	protected String getCountQuery(String originalQuery)
+    {
+        return "Select count(*) from (" + originalQuery + ") alias";
+    }
+
+	protected PagenatedResultData createStatemtentAndExecuteQuery(JDBCDAO jdbcDAO,QueryParams queryParams, boolean getSublistOfResult) throws SQLException, SMException, DAOException
+    {
+
+	    ResultSet resultSet = jdbcDAO.getQueryResultSet(queryParams.getQuery());
+
+        if (getSublistOfResult && queryParams.getStartIndex() > 0)
+        {
+            resultSet.absolute(queryParams.getStartIndex());
+        }
+        List list = getListFromResultSet(jdbcDAO,resultSet,queryParams); // get the result set.
+
+        // find the total number of records.
+        int totalRecords;
+        if (getSublistOfResult)
+        {
+            resultSet.last();
+            totalRecords = resultSet.getRow();
+        }
+        else
+        {
+            totalRecords = list.size(); // these are all records returned from query.
+        }
+        return new PagenatedResultData(list, totalRecords);
+    }
+
+	
+	private String putPageNumInSQL(String sql, int startIndex, int noOfRecords)
+    {
+        StringBuffer newSql = new StringBuffer(80);
+        final String SELECT_CLAUSE = "SELECT";
+
+        /**
+         * AQConstants required for forming/changing SQL.
+         */
+       final String FROM_CLAUSE = "FROM";
+        /*if (Variables.databaseName.equals(AQConstants.MYSQL_DATABASE))
+        {
+            // Add limit clause for the MYSQL case
+            newSql.append(sql).append(" Limit ").append(startIndex).append(" , ").append(
+                    noOfRecords);
+        }
+        else
+        {*/
+            /**
+             * Name: Prafull
+             * Reviewer: Aarti
+             * Bug: 4857,4865
+             * Description: Changed Query modification logic for Oracle.
+             *
+             * forming new query, by using original query as inner query & adding rownum conditions in outer query.
+             */
+            newSql.append(SELECT_CLAUSE).append(" * ").append(FROM_CLAUSE).append(" (").append(
+                    SELECT_CLAUSE).append(" qry.*, ROWNUM rn ").append(FROM_CLAUSE).append(" (")
+                    .append(sql).append(") qry WHERE ROWNUM <= ").append(startIndex + noOfRecords)
+                    .append(") WHERE rn > ").append(startIndex);
+            // Another approach to form simillar query by putting both rownum conditions in the outer query.
+            //          newSql.append(SELECT_CLAUSE).append(" * ").append(FROM_CLAUSE).append(" (").append(SELECT_CLAUSE)
+            //          .append(" qry.*, ROWNUM rn ").append(FROM_CLAUSE).append(" (").append(sql).append(") qry ) WHERE rn BETWEEN ")
+            //          .append(startIndex+1).append(" AND ").append(startIndex + noOfRecords);;
+
+        //}
+        return newSql.toString();
+    }
+	private List getListFromResultSet(JDBCDAO jdbcDAO,ResultSet resultSet,QueryParams queryParams) throws SQLException, SMException, DAOException
+    {
+	    List list = new ArrayList();
+	    int columnCount =resultSet.getMetaData().getColumnCount();
+	    int recordCount = 0;
+	    while (resultSet.next() && recordCount < queryParams.getNoOfRecords())
+        {
+            List aList = new ArrayList();
+            // Srinath: rewrote to use resultSet getters of correct type.
+            for (int i = 1; i <= columnCount; i++)
+            {
+                populateListToFilter(resultSet, aList, i);
+            }
+            list.add(aList);
+            recordCount++;
+        }
+	    
+	    return list;
+    }
+	
+	    private void populateListToFilter(ResultSet resultSet,
+	            List aList, int counter) throws SQLException
+	    {
+	        Object retObj;
+	        switch (resultSet.getMetaData().getColumnType(counter))
+	        {
+	            case Types.CLOB :
+	                retObj = resultSet.getObject(counter);
+	                break;
+	            case Types.DATE :
+	            case Types.TIMESTAMP :
+	                retObj = resultSet.getTimestamp(counter);
+	                if (retObj == null)
+	                {
+	                    break;
+	                }
+	                SimpleDateFormat formatter = new SimpleDateFormat(CommonServiceLocator.getInstance().getTimeStampPattern());
+	                retObj = formatter.format((java.util.Date) retObj);
+	                break;
+	            default :
+	                retObj = resultSet.getObject(counter);
+	                if (retObj != null)
+	                {
+	                    retObj = retObj.toString();
+	                }
+	        }
+	        if (retObj == null)
+	        {
+	            aList.add("");
+	        }
+	        else
+	        {
+	            aList.add(retObj);
+	        }
+	    }
+
 
 	/**
 	 * Adds the dataElement to result view.
