@@ -618,6 +618,11 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		}
 		return prevValueDisplayName;
 	}
+	
+	public String getDisplayNamebyTableName(String tableName) throws DAOException, ClassNotFoundException 
+	{
+		return getDisplayNamebyTableName(tableName,null);
+	}
 
 	/**
 	 * gets Display Name by Table Name.
@@ -626,7 +631,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 	 * @throws DAOException generic DAOException.
 	 * @throws ClassNotFoundException Class Not Found Exception.
 	 */
-	public String getDisplayNamebyTableName(String tableName) throws DAOException,
+	public String getDisplayNamebyTableName(String tableName, SessionDataBean sessionDataBean) throws DAOException,
 			ClassNotFoundException
 	{
 		String prevValueDisplayName = null;
@@ -637,7 +642,7 @@ public class QueryBizLogic extends DefaultBizLogic implements IQueryBizLogic
 		try
 		{
 			jdbcDAO = daofactory.getJDBCDAO();
-			jdbcDAO.openSession(null);
+			jdbcDAO.openSession(sessionDataBean);
 			String sql = "select DISPLAY_NAME from CATISSUE_QUERY_TABLE_DATA where TABLE_NAME='"
 				+ tableName + "'";
 			List list = jdbcDAO.executeQuery(sql);
